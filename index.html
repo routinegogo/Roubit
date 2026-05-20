@@ -3,1054 +3,1026 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RouBit — Turn Your Daily Routine into an Epic Quest</title>
-  <meta name="description" content="RouBit turns boring daily habits into fun RPG quests. Level up your life, earn rewards, and build streaks that last." />
-
-  <!-- Tailwind CSS CDN -->
+  <title>RouBit — 루틴을 게임으로, 습관을 레전드로</title>
+  <meta name="description" content="RouBit은 지루한 일상 루틴을 RPG 퀘스트로 바꿔주는 게임화 습관 관리 앱입니다. 캐릭터를 키우고, AR 배틀로 경쟁하고, 진짜 보상을 받으세요." />
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'neon-purple': '#a855f7',
-            'neon-cyan': '#22d3ee',
-            'neon-pink': '#ec4899',
-            'dark-bg': '#080b14',
-            'dark-card': '#0f1628',
-            'dark-border': '#1e2d4a',
-          },
-          fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            display: ['Space Grotesk', 'sans-serif'],
-          },
-          animation: {
-            'float': 'float 6s ease-in-out infinite',
-            'float-delayed': 'float 6s ease-in-out 2s infinite',
-            'glow-pulse': 'glowPulse 3s ease-in-out infinite',
-            'slide-up': 'slideUp 0.7s ease-out forwards',
-            'fade-in': 'fadeIn 0.8s ease-out forwards',
-            'spin-slow': 'spin 20s linear infinite',
-            'shimmer': 'shimmer 2.5s linear infinite',
-          },
-          keyframes: {
-            float: {
-              '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-18px)' },
-            },
-            glowPulse: {
-              '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
-              '50%': { opacity: '1', transform: 'scale(1.05)' },
-            },
-            slideUp: {
-              '0%': { opacity: '0', transform: 'translateY(40px)' },
-              '100%': { opacity: '1', transform: 'translateY(0)' },
-            },
-            fadeIn: {
-              '0%': { opacity: '0' },
-              '100%': { opacity: '1' },
-            },
-            shimmer: {
-              '0%': { backgroundPosition: '-200% 0' },
-              '100%': { backgroundPosition: '200% 0' },
-            },
-          },
-        }
-      }
-    }
-  </script>
-
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --neon-purple: #a855f7;
+      --neon-cyan: #06b6d4;
+      --neon-pink: #ec4899;
+      --dark-bg: #050714;
+      --card-bg: #0d1117;
+      --card-border: rgba(168,85,247,0.25);
+    }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      background-color: #080b14;
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--dark-bg);
       color: #e2e8f0;
-      font-family: 'Inter', sans-serif;
       overflow-x: hidden;
     }
+    .font-orbitron { font-family: 'Orbitron', sans-serif; }
 
-    /* ── Neon Glow Utilities ── */
-    .glow-purple { box-shadow: 0 0 30px rgba(168,85,247,0.4), 0 0 60px rgba(168,85,247,0.15); }
-    .glow-cyan   { box-shadow: 0 0 30px rgba(34,211,238,0.4), 0 0 60px rgba(34,211,238,0.15); }
-    .text-glow-purple { text-shadow: 0 0 20px rgba(168,85,247,0.8), 0 0 40px rgba(168,85,247,0.4); }
-    .text-glow-cyan   { text-shadow: 0 0 20px rgba(34,211,238,0.8), 0 0 40px rgba(34,211,238,0.4); }
+    /* ── Particles ── */
+    #particles-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
 
-    /* ── Gradient Text ── */
-    .gradient-text {
-      background: linear-gradient(135deg, #a855f7 0%, #22d3ee 50%, #ec4899 100%);
+    /* ── Neon glow helpers ── */
+    .glow-purple { text-shadow: 0 0 20px rgba(168,85,247,0.8), 0 0 40px rgba(168,85,247,0.4); }
+    .glow-cyan   { text-shadow: 0 0 20px rgba(6,182,212,0.8),  0 0 40px rgba(6,182,212,0.4); }
+    .glow-pink   { text-shadow: 0 0 20px rgba(236,72,153,0.8), 0 0 40px rgba(236,72,153,0.4); }
+    .box-glow-purple { box-shadow: 0 0 20px rgba(168,85,247,0.3), inset 0 0 20px rgba(168,85,247,0.05); }
+    .box-glow-cyan   { box-shadow: 0 0 20px rgba(6,182,212,0.3),  inset 0 0 20px rgba(6,182,212,0.05); }
+
+    /* ── Gradient text ── */
+    .grad-text {
+      background: linear-gradient(135deg, #a855f7 0%, #06b6d4 50%, #ec4899 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .gradient-text-2 {
-      background: linear-gradient(90deg, #22d3ee 0%, #a855f7 100%);
+    .grad-text-2 {
+      background: linear-gradient(135deg, #06b6d4 0%, #a855f7 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-    }
-
-    /* ── Glassmorphism Card ── */
-    .glass-card {
-      background: rgba(15, 22, 40, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(168,85,247,0.2);
-    }
-    .glass-card:hover {
-      border-color: rgba(168,85,247,0.5);
-      box-shadow: 0 0 40px rgba(168,85,247,0.15);
-    }
-
-    /* ── Gradient Borders ── */
-    .gradient-border {
-      position: relative;
-      background: #0f1628;
-      border-radius: 16px;
-    }
-    .gradient-border::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 16px;
-      padding: 1px;
-      background: linear-gradient(135deg, #a855f7, #22d3ee, #ec4899);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-    }
-
-    /* ── CTA Buttons ── */
-    .btn-primary {
-      background: linear-gradient(135deg, #a855f7, #7c3aed);
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .btn-primary::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(168,85,247,0.5); }
-    .btn-primary:hover::after { opacity: 1; }
-    .btn-primary:active { transform: translateY(0); }
-
-    .btn-secondary {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.15);
-      transition: all 0.3s ease;
-    }
-    .btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(34,211,238,0.5);
-      box-shadow: 0 0 20px rgba(34,211,238,0.2);
-      transform: translateY(-2px);
     }
 
     /* ── Navbar ── */
-    .navbar {
-      background: rgba(8,11,20,0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(168,85,247,0.1);
-    }
+    nav { transition: background 0.3s, backdrop-filter 0.3s; }
+    nav.scrolled { background: rgba(5,7,20,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(168,85,247,0.2); }
 
-    /* ── Background Grid ── */
-    .bg-grid {
-      background-image:
-        linear-gradient(rgba(168,85,247,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(168,85,247,0.05) 1px, transparent 1px);
-      background-size: 60px 60px;
+    /* ── Hook overlay ── */
+    #hook-overlay {
+      position: fixed; inset: 0; z-index: 9999;
+      background: radial-gradient(ellipse at center, #0d0520 0%, #050714 70%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 2rem; text-align: center;
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
+    #hook-overlay.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
 
-    /* ── Orb Backgrounds ── */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      pointer-events: none;
+    /* ── Buttons ── */
+    .btn-primary {
+      background: linear-gradient(135deg, #7c3aed, #a855f7);
+      border: 1px solid rgba(168,85,247,0.5);
+      transition: all 0.3s;
     }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(168,85,247,0.5); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.3s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); transform: translateY(-2px); }
 
-    /* ── Scroll Reveal ── */
-    .reveal {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+    /* ── Cards ── */
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.25rem;
+      transition: all 0.4s;
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-    .reveal-delay-4 { transition-delay: 0.4s; }
+    .feature-card:hover { transform: translateY(-6px); border-color: rgba(168,85,247,0.6); box-shadow: 0 20px 60px rgba(168,85,247,0.2); }
 
-    /* ── Stat Counter ── */
-    .stat-number {
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 800;
-    }
-
-    /* ── Feature Icon Ring ── */
-    .icon-ring {
-      background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(34,211,238,0.1));
+    .reward-card {
+      background: linear-gradient(135deg, rgba(168,85,247,0.1) 0%, rgba(13,17,23,0.9) 100%);
       border: 1px solid rgba(168,85,247,0.3);
+      border-radius: 1.25rem;
+      transition: all 0.4s;
+    }
+    .reward-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(168,85,247,0.3); border-color: rgba(168,85,247,0.7); }
+
+    .bench-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: 1rem;
+      transition: all 0.3s;
     }
 
-    /* ── Progress Bar Animation ── */
-    .progress-bar {
-      background: linear-gradient(90deg, #a855f7, #22d3ee);
-      animation: progressGrow 2s ease-out forwards;
-      transform-origin: left;
-    }
-    @keyframes progressGrow {
-      from { width: 0%; }
-      to   { width: var(--target-width); }
-    }
+    /* ── Tabs ── */
+    .tab-btn { transition: all 0.3s; border-bottom: 2px solid transparent; }
+    .tab-btn.active { color: #a855f7; border-bottom-color: #a855f7; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
-    /* ── Shimmer Button ── */
-    .shimmer-btn {
-      background: linear-gradient(90deg, #a855f7 0%, #22d3ee 50%, #a855f7 100%);
-      background-size: 200% auto;
-      animation: shimmer 2.5s linear infinite;
-    }
+    /* ── Scroll reveal ── */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
-    /* ── Mobile Menu ── */
-    #mobile-menu {
-      transition: max-height 0.4s ease, opacity 0.4s ease;
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-    }
-    #mobile-menu.open {
-      max-height: 400px;
-      opacity: 1;
-    }
+    /* ── Progress bar ── */
+    .exp-bar { background: linear-gradient(90deg, #7c3aed, #a855f7, #06b6d4); border-radius: 9999px; }
 
-    /* ── Particle Canvas ── */
-    #particle-canvas {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
+    /* ── Streak dots ── */
+    .streak-dot { width: 2rem; height: 2rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+    .streak-dot.done { background: linear-gradient(135deg, #7c3aed, #a855f7); }
+    .streak-dot.miss { background: rgba(255,255,255,0.08); }
 
-    /* ── Testimonial Card ── */
-    .testimonial-card {
-      background: rgba(15,22,40,0.8);
-      border: 1px solid rgba(168,85,247,0.15);
-      transition: all 0.3s ease;
-    }
-    .testimonial-card:hover {
-      border-color: rgba(168,85,247,0.4);
-      transform: translateY(-4px);
-    }
+    /* ── AR image grid ── */
+    .ar-img { border-radius: 1rem; overflow: hidden; border: 1px solid rgba(168,85,247,0.3); }
+
+    /* ── Counter ── */
+    .counter-num { font-family: 'Orbitron', sans-serif; }
+
+    /* ── Mobile menu ── */
+    #mobile-menu { display: none; }
+    #mobile-menu.open { display: block; }
 
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #080b14; }
-    ::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #050714; }
+    ::-webkit-scrollbar-thumb { background: #7c3aed; border-radius: 3px; }
+
+    /* ── Floating badge ── */
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    .float-badge { animation: float 3s ease-in-out infinite; }
+    .float-badge-2 { animation: float 3.5s ease-in-out 0.5s infinite; }
+
+    /* ── Pulse ring ── */
+    @keyframes pulse-ring { 0%{transform:scale(1);opacity:0.6} 100%{transform:scale(1.6);opacity:0} }
+    .pulse-ring { animation: pulse-ring 2s ease-out infinite; }
+
+    /* ── Typewriter ── */
+    .typewriter-cursor::after { content: '|'; animation: blink 0.8s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
   </style>
 </head>
-<body class="bg-dark-bg">
+<body>
+<canvas id="particles-canvas"></canvas>
 
-  <!-- ═══════════════════════════════════════════
-       NAVBAR
-  ═══════════════════════════════════════════ -->
-  <nav class="navbar fixed top-0 left-0 right-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <!-- Logo -->
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center text-sm font-black text-white">R</div>
-          <span class="font-display font-bold text-xl gradient-text">RouBit</span>
-        </div>
+<!-- ════════════════════════════════════════
+     HOOK OVERLAY
+════════════════════════════════════════ -->
+<div id="hook-overlay">
+  <div class="mb-8">
+    <div class="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center text-4xl" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">🐰</div>
+    <p class="text-purple-400 text-sm font-medium tracking-widest uppercase mb-2">잠깐, 솔직하게 대답해보세요</p>
+  </div>
 
-        <!-- Desktop Nav -->
-        <div class="hidden md:flex items-center gap-8">
-          <a href="#features" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">Features</a>
-          <a href="#showcase" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">App</a>
-          <a href="#testimonials" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">Reviews</a>
-          <a href="#download" class="btn-primary px-5 py-2 rounded-full text-sm font-semibold text-white">Download</a>
-        </div>
+  <h1 class="text-3xl md:text-5xl font-black text-white leading-tight mb-6 max-w-2xl">
+    새해에 다짐한 루틴,<br/>
+    <span class="grad-text">지금도 실천하고 있나요?</span>
+  </h1>
 
-        <!-- Mobile Hamburger -->
-        <button id="menu-btn" class="md:hidden text-slate-400 hover:text-white transition-colors" aria-label="Menu">
-          <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
-          <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-          </svg>
-        </button>
-      </div>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl w-full mb-8">
+    <div class="rounded-xl p-4 text-center" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3)">
+      <p class="text-3xl font-black text-red-400">92%</p>
+      <p class="text-sm text-gray-400 mt-1">새해 결심 실패율</p>
     </div>
-
-    <!-- Mobile Menu -->
-    <div id="mobile-menu" class="md:hidden border-t border-dark-border px-4 py-2">
-      <div class="flex flex-col gap-1 pb-4">
-        <a href="#features" class="text-slate-400 hover:text-white py-3 text-sm font-medium transition-colors border-b border-dark-border" onclick="closeMobileMenu()">Features</a>
-        <a href="#showcase" class="text-slate-400 hover:text-white py-3 text-sm font-medium transition-colors border-b border-dark-border" onclick="closeMobileMenu()">App</a>
-        <a href="#testimonials" class="text-slate-400 hover:text-white py-3 text-sm font-medium transition-colors border-b border-dark-border" onclick="closeMobileMenu()">Reviews</a>
-        <a href="#download" class="mt-3 btn-primary px-5 py-3 rounded-full text-sm font-semibold text-white text-center" onclick="closeMobileMenu()">Download Free</a>
-      </div>
+    <div class="rounded-xl p-4 text-center" style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3)">
+      <p class="text-3xl font-black text-yellow-400">3주</p>
+      <p class="text-sm text-gray-400 mt-1">평균 포기 시점</p>
     </div>
-  </nav>
-
-  <!-- ═══════════════════════════════════════════
-       HERO SECTION
-  ═══════════════════════════════════════════ -->
-  <section id="hero" class="relative min-h-screen flex items-center pt-16 overflow-hidden bg-grid">
-    <!-- Background Orbs -->
-    <div class="orb w-96 h-96 bg-purple-600 opacity-20 top-10 -left-32"></div>
-    <div class="orb w-80 h-80 bg-cyan-500 opacity-15 top-32 right-0"></div>
-    <div class="orb w-64 h-64 bg-pink-500 opacity-10 bottom-20 left-1/3"></div>
-
-    <!-- Particle Canvas -->
-    <canvas id="particle-canvas"></canvas>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
-      <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-
-        <!-- Left: Text Content -->
-        <div class="text-center lg:text-left">
-          <!-- Badge -->
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6 reveal">
-            <span class="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></span>
-            <span class="text-xs font-semibold text-neon-cyan tracking-widest uppercase">New · Gamified Habit Tracker</span>
-          </div>
-
-          <!-- Headline -->
-          <h1 class="font-display font-black text-5xl sm:text-6xl lg:text-7xl leading-tight mb-6 reveal reveal-delay-1">
-            Turn Your<br/>
-            <span class="gradient-text">Daily Routine</span><br/>
-            into an<br/>
-            <span class="text-white">Epic Quest!</span>
-          </h1>
-
-          <!-- Subtitle -->
-          <p class="text-slate-400 text-lg sm:text-xl leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0 reveal reveal-delay-2">
-            RouBit transforms boring daily habits into fun RPG quests. Level up your character, earn rewards, and build streaks that actually stick.
-          </p>
-
-          <!-- CTA Buttons -->
-          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10 reveal reveal-delay-3">
-            <a href="#download" class="btn-primary flex items-center justify-center gap-3 px-7 py-4 rounded-2xl font-semibold text-white text-base group">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-              </svg>
-              <div class="text-left">
-                <div class="text-xs opacity-80">Download on the</div>
-                <div class="font-bold">App Store</div>
-              </div>
-            </a>
-
-            <a href="#download" class="btn-secondary flex items-center justify-center gap-3 px-7 py-4 rounded-2xl font-semibold text-white text-base group">
-              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3.18 23.76c.3.17.64.22.97.14l12.49-7.17-2.79-2.79-10.67 9.82zm-1.59-20.4C1.24 3.72 1 4.18 1 4.78v14.44c0 .6.24 1.06.59 1.42l.07.07 8.09-8.09v-.19L1.59 3.36zm18.12 8.3l-2.55-1.47-3.07 3.07 3.07 3.07 2.57-1.48c.73-.42.73-1.11 0-1.53l-.02-.66zm-17.1 10.32L14.1 14.5l-2.79-2.79L2.61 21.98z"/>
-              </svg>
-              <div class="text-left">
-                <div class="text-xs opacity-80">Get it on</div>
-                <div class="font-bold">Google Play</div>
-              </div>
-            </a>
-          </div>
-
-          <!-- Social Proof Stats -->
-          <div class="flex items-center gap-6 justify-center lg:justify-start reveal reveal-delay-4">
-            <div class="flex -space-x-3">
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 border-2 border-dark-bg flex items-center justify-center text-xs font-bold">A</div>
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-400 to-blue-400 border-2 border-dark-bg flex items-center justify-center text-xs font-bold">B</div>
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 border-2 border-dark-bg flex items-center justify-center text-xs font-bold">C</div>
-              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-teal-400 border-2 border-dark-bg flex items-center justify-center text-xs font-bold">D</div>
-            </div>
-            <div>
-              <div class="flex items-center gap-1 mb-0.5">
-                <span class="text-yellow-400 text-sm">★★★★★</span>
-              </div>
-              <p class="text-slate-400 text-xs">Loved by <span class="text-white font-semibold">50,000+</span> questers</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Right: App Mockup -->
-        <div class="relative flex justify-center lg:justify-end reveal reveal-delay-2">
-          <div class="relative w-72 sm:w-80 lg:w-96 animate-float">
-            <!-- Glow behind mockup -->
-            <div class="absolute inset-0 bg-purple-500 opacity-20 blur-3xl rounded-full scale-75"></div>
-            <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663665192860/Wikxk2anuAmLqrPPdcBFwZ/roubit-mockup-LAo8PkNdHp2NXVReUT5X4d.webp"
-              alt="RouBit App Screenshot"
-              class="relative z-10 w-full drop-shadow-2xl rounded-3xl"
-              loading="eager"
-            />
-            <!-- Floating badges -->
-            <div class="absolute -left-8 top-1/4 z-20 glass-card rounded-2xl px-4 py-3 animate-float-delayed glow-purple">
-              <div class="flex items-center gap-2">
-                <span class="text-2xl">⚔️</span>
-                <div>
-                  <div class="text-xs text-slate-400">Quest Done!</div>
-                  <div class="text-sm font-bold text-white">+50 EXP</div>
-                </div>
-              </div>
-            </div>
-            <div class="absolute -right-6 bottom-1/3 z-20 glass-card rounded-2xl px-4 py-3 animate-float glow-cyan" style="animation-delay:1s">
-              <div class="flex items-center gap-2">
-                <span class="text-2xl">🔥</span>
-                <div>
-                  <div class="text-xs text-slate-400">Streak</div>
-                  <div class="text-sm font-bold text-white">7 Days!</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="rounded-xl p-4 text-center" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.3)">
+      <p class="text-3xl font-black text-purple-400">66일</p>
+      <p class="text-sm text-gray-400 mt-1">습관 형성에 필요한 날</p>
     </div>
+  </div>
 
-    <!-- Bottom Wave -->
-    <div class="absolute bottom-0 left-0 right-0">
-      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <path d="M0 80L1440 80L1440 40C1200 80 960 0 720 40C480 80 240 0 0 40L0 80Z" fill="#080b14"/>
-      </svg>
+  <p class="text-gray-300 text-lg mb-8 max-w-xl">
+    의지력만으로는 부족합니다.<br/>
+    <strong class="text-white">게임처럼 재미있어야</strong> 습관이 됩니다.
+  </p>
+
+  <button id="hook-cta" class="btn-primary text-white font-bold text-lg px-10 py-4 rounded-full cursor-pointer">
+    RouBit으로 루틴 바꾸기 →
+  </button>
+  <p class="text-gray-500 text-sm mt-4">무료 · 로그인 불필요 · 지금 바로 시작</p>
+</div>
+
+<!-- ════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 px-6 py-4">
+  <div class="max-w-6xl mx-auto flex items-center justify-between">
+    <a href="#" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg font-black text-white" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">R</div>
+      <span class="font-orbitron font-bold text-white text-lg">RouBit</span>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#problem"  class="text-gray-400 hover:text-purple-400 transition text-sm">문제제기</a>
+      <a href="#features" class="text-gray-400 hover:text-purple-400 transition text-sm">핵심기능</a>
+      <a href="#rewards"  class="text-gray-400 hover:text-purple-400 transition text-sm">보상시스템</a>
+      <a href="#showcase" class="text-gray-400 hover:text-purple-400 transition text-sm">앱 소개</a>
+      <a href="#download" class="btn-primary text-white text-sm font-semibold px-5 py-2 rounded-full">다운로드</a>
     </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       STATS BAND
-  ═══════════════════════════════════════════ -->
-  <section class="py-16 relative overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-dark-bg to-cyan-900/20"></div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-        <div class="text-center reveal">
-          <div class="stat-number text-4xl sm:text-5xl gradient-text mb-2" data-target="50000">0</div>
-          <p class="text-slate-400 text-sm">Active Questers</p>
-        </div>
-        <div class="text-center reveal reveal-delay-1">
-          <div class="stat-number text-4xl sm:text-5xl gradient-text-2 mb-2" data-target="2000000">0</div>
-          <p class="text-slate-400 text-sm">Quests Completed</p>
-        </div>
-        <div class="text-center reveal reveal-delay-2">
-          <div class="stat-number text-4xl sm:text-5xl gradient-text mb-2" data-target="98">0</div>
-          <p class="text-slate-400 text-sm">% Satisfaction Rate</p>
-        </div>
-        <div class="text-center reveal reveal-delay-3">
-          <div class="stat-number text-4xl sm:text-5xl gradient-text-2 mb-2" data-target="4.9">0</div>
-          <p class="text-slate-400 text-sm">App Store Rating ⭐</p>
-        </div>
-      </div>
+    <button id="menu-btn" class="md:hidden text-white text-2xl">☰</button>
+  </div>
+  <div id="mobile-menu" class="md:hidden mt-4 pb-4 border-t border-purple-900/30">
+    <div class="flex flex-col gap-4 pt-4">
+      <a href="#problem"  class="text-gray-300 text-sm" onclick="document.getElementById('mobile-menu').classList.remove('open')">문제제기</a>
+      <a href="#features" class="text-gray-300 text-sm" onclick="document.getElementById('mobile-menu').classList.remove('open')">핵심기능</a>
+      <a href="#rewards"  class="text-gray-300 text-sm" onclick="document.getElementById('mobile-menu').classList.remove('open')">보상시스템</a>
+      <a href="#showcase" class="text-gray-300 text-sm" onclick="document.getElementById('mobile-menu').classList.remove('open')">앱 소개</a>
+      <a href="#download" class="btn-primary text-white text-sm font-semibold px-5 py-2 rounded-full text-center" onclick="document.getElementById('mobile-menu').classList.remove('open')">다운로드</a>
     </div>
-  </section>
+  </div>
+</nav>
 
-  <!-- ═══════════════════════════════════════════
-       FEATURES SECTION
-  ═══════════════════════════════════════════ -->
-  <section id="features" class="py-24 relative overflow-hidden">
-    <div class="orb w-96 h-96 bg-purple-700 opacity-10 -top-20 -right-20"></div>
-    <div class="orb w-64 h-64 bg-cyan-600 opacity-10 bottom-0 -left-10"></div>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Section Header -->
-      <div class="text-center mb-16">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-4 reveal">
-          <span class="text-neon-purple text-xs font-semibold tracking-widest uppercase">Core Features</span>
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center pt-24 pb-16 px-6" style="z-index:1">
+  <div class="max-w-6xl mx-auto w-full">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <!-- Left -->
+      <div>
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold mb-6 text-purple-300" style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3)">
+          <span class="w-2 h-2 rounded-full bg-purple-400 pulse-ring inline-block"></span>
+          게임화 루틴 관리 앱 · 지금 출시
         </div>
-        <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-4 reveal reveal-delay-1">
-          Why Questers <span class="gradient-text">Love RouBit</span>
-        </h2>
-        <p class="text-slate-400 text-lg max-w-2xl mx-auto reveal reveal-delay-2">
-          Every feature is designed to make habit-building feel less like a chore and more like an adventure.
+        <h1 class="text-4xl md:text-6xl font-black text-white leading-tight mb-6">
+          지루한 루틴을<br/>
+          <span class="grad-text typewriter-cursor" id="hero-title">전설적인 퀘스트</span>로
+        </h1>
+        <p class="text-gray-400 text-lg mb-8 leading-relaxed">
+          RouBit은 매일의 습관을 RPG 퀘스트로 변환합니다.<br/>
+          캐릭터를 키우고, AR 배틀로 경쟁하고, <strong class="text-white">진짜 보상</strong>을 받으세요.
         </p>
-      </div>
-
-      <!-- Feature Cards Grid -->
-      <div class="grid md:grid-cols-3 gap-6 mb-16">
-
-        <!-- Feature 1: Quest-like Routines -->
-        <div class="gradient-border p-6 reveal group cursor-default transition-all duration-300 hover:-translate-y-2">
-          <div class="icon-ring w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-            <span class="text-3xl">⚔️</span>
-          </div>
-          <h3 class="font-display font-bold text-xl text-white mb-3">Quest-like Routines</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">
-            Transform boring daily tasks into exciting game quests. Each routine becomes a mission with clear objectives, difficulty levels, and epic rewards.
-          </p>
-          <div class="space-y-2">
-            <div class="flex items-center gap-2 text-xs text-slate-500">
-              <span class="w-1.5 h-1.5 rounded-full bg-neon-purple"></span>
-              Difficulty-based EXP rewards
-            </div>
-            <div class="flex items-center gap-2 text-xs text-slate-500">
-              <span class="w-1.5 h-1.5 rounded-full bg-neon-cyan"></span>
-              Daily, weekly & custom quests
-            </div>
-            <div class="flex items-center gap-2 text-xs text-slate-500">
-              <span class="w-1.5 h-1.5 rounded-full bg-neon-pink"></span>
-              PVP battle system
-            </div>
-          </div>
+        <div class="flex flex-wrap gap-4 mb-10">
+          <a href="#download" class="btn-primary text-white font-bold px-8 py-4 rounded-full flex items-center gap-2">
+            <span>🍎</span> App Store 다운로드
+          </a>
+          <a href="#download" class="btn-secondary text-white font-semibold px-8 py-4 rounded-full flex items-center gap-2">
+            <span>▶</span> Google Play
+          </a>
         </div>
-
-        <!-- Feature 2: Level Up & Rewards -->
-        <div class="gradient-border p-6 reveal reveal-delay-1 group cursor-default transition-all duration-300 hover:-translate-y-2">
-          <div class="icon-ring w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-            <span class="text-3xl">🏆</span>
+        <!-- Social proof -->
+        <div class="flex items-center gap-4">
+          <div class="flex -space-x-2">
+            <div class="w-9 h-9 rounded-full border-2 border-purple-500 flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">A</div>
+            <div class="w-9 h-9 rounded-full border-2 border-cyan-500 flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#0891b2,#06b6d4)">B</div>
+            <div class="w-9 h-9 rounded-full border-2 border-pink-500 flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#be185d,#ec4899)">C</div>
+            <div class="w-9 h-9 rounded-full border-2 border-purple-500 flex items-center justify-center text-sm font-bold" style="background:linear-gradient(135deg,#6d28d9,#7c3aed)">D</div>
           </div>
-          <h3 class="font-display font-bold text-xl text-white mb-3">Level Up & Rewards</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">
-            Earn EXP and Gold as you complete routines. Level up your RPG character, unlock rare skins, and customize your avatar to show off your progress.
-          </p>
-          <!-- Mini XP Bar -->
-          <div class="bg-dark-border rounded-full h-2 mb-2 overflow-hidden">
-            <div class="progress-bar h-full rounded-full" style="--target-width: 72%"></div>
+          <div>
+            <p class="text-white text-sm font-semibold">★★★★★</p>
+            <p class="text-gray-500 text-xs">50,000+ 퀘스터가 함께합니다</p>
           </div>
-          <div class="flex justify-between text-xs text-slate-500">
-            <span>Lv. 12</span>
-            <span>720 / 1000 EXP</span>
-          </div>
-        </div>
-
-        <!-- Feature 3: Streak & Statistics -->
-        <div class="gradient-border p-6 reveal reveal-delay-2 group cursor-default transition-all duration-300 hover:-translate-y-2">
-          <div class="icon-ring w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
-            <span class="text-3xl">📊</span>
-          </div>
-          <h3 class="font-display font-bold text-xl text-white mb-3">Streak & Statistics</h3>
-          <p class="text-slate-400 text-sm leading-relaxed mb-4">
-            Beautiful visualized stats keep you motivated. Track your streaks, completion rates, and compare with friends on the community leaderboard.
-          </p>
-          <!-- Mini Streak Dots -->
-          <div class="flex gap-1.5 flex-wrap">
-            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
-            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
-            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
-            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
-            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
-            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
-            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
-            <div class="w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center text-xs text-slate-500">·</div>
-            <div class="w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center text-xs text-slate-500">·</div>
-          </div>
-          <p class="text-xs text-neon-cyan mt-2 font-semibold">🔥 7-Day Streak!</p>
         </div>
       </div>
-
-      <!-- Extra Feature Row -->
-      <div class="grid md:grid-cols-2 gap-6">
-        <!-- AR Character -->
-        <div class="glass-card rounded-2xl p-6 reveal group transition-all duration-300 hover:-translate-y-1">
-          <div class="flex items-start gap-4">
-            <div class="icon-ring w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span class="text-2xl">🥽</span>
-            </div>
-            <div>
-              <h3 class="font-display font-bold text-lg text-white mb-2">AR Character System</h3>
-              <p class="text-slate-400 text-sm leading-relaxed">Summon your RPG character in the real world via your camera. Place your hero on your hand and capture proof-of-habit photos.</p>
+      <!-- Right: Mockup -->
+      <div class="relative flex justify-center">
+        <div class="relative w-64 md:w-72">
+          <!-- Phone frame -->
+          <div class="rounded-3xl overflow-hidden border-4 border-purple-700/50 box-glow-purple" style="background:#0d1117">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663665192860/Wikxk2anuAmLqrPPdcBFwZ/roubit-mockup-LAo8PkNdHp2NXVReUT5X4d.webp"
+                 alt="RouBit 앱 스크린샷" class="w-full" onerror="this.style.display='none'" />
+            <!-- Fallback UI -->
+            <div class="p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-purple-400 text-xs font-bold">오늘의 퀘스트</span>
+                <span class="text-yellow-400 text-xs">🪙 1,240</span>
+              </div>
+              <div class="space-y-2">
+                <div class="rounded-lg p-3 flex items-center gap-3" style="background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.2)">
+                  <span class="text-xl">💧</span>
+                  <div class="flex-1"><p class="text-white text-xs font-semibold">물 8잔 마시기</p><p class="text-gray-500 text-xs">+30 EXP · 쉬움</p></div>
+                  <div class="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs">✓</div>
+                </div>
+                <div class="rounded-lg p-3 flex items-center gap-3" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2)">
+                  <span class="text-xl">🏃</span>
+                  <div class="flex-1"><p class="text-white text-xs font-semibold">30분 달리기</p><p class="text-gray-500 text-xs">+80 EXP · 보통</p></div>
+                  <div class="w-5 h-5 rounded-full border border-gray-600 text-xs"></div>
+                </div>
+                <div class="rounded-lg p-3 flex items-center gap-3" style="background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.2)">
+                  <span class="text-xl">📚</span>
+                  <div class="flex-1"><p class="text-white text-xs font-semibold">독서 20분</p><p class="text-gray-500 text-xs">+50 EXP · 보통</p></div>
+                  <div class="w-5 h-5 rounded-full border border-gray-600 text-xs"></div>
+                </div>
+              </div>
+              <div>
+                <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">Lv.12 진행도</span><span class="text-purple-400">720/1000 EXP</span></div>
+                <div class="h-2 rounded-full w-full" style="background:rgba(255,255,255,0.1)">
+                  <div class="exp-bar h-2 rounded-full" style="width:72%"></div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-
-        <!-- PVP Battle -->
-        <div class="glass-card rounded-2xl p-6 reveal reveal-delay-1 group transition-all duration-300 hover:-translate-y-1">
-          <div class="flex items-start gap-4">
-            <div class="icon-ring w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span class="text-2xl">⚡</span>
-            </div>
-            <div>
-              <h3 class="font-display font-bold text-lg text-white mb-2">PVP Battle Mode</h3>
-              <p class="text-slate-400 text-sm leading-relaxed">Challenge nearby users to AR battles. Losers must complete a routine chosen by the winner — the ultimate accountability system.</p>
-            </div>
+          <!-- Floating badges -->
+          <div class="float-badge absolute -right-6 top-12 rounded-xl px-3 py-2 text-xs font-bold text-white" style="background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 8px 24px rgba(168,85,247,0.5)">
+            ⚔️ 퀘스트 완료!<br/><span class="text-yellow-300">+50 EXP</span>
+          </div>
+          <div class="float-badge-2 absolute -left-6 bottom-20 rounded-xl px-3 py-2 text-xs font-bold text-white" style="background:linear-gradient(135deg,#0891b2,#06b6d4);box-shadow:0 8px 24px rgba(6,182,212,0.5)">
+            🔥 7일 스트릭!
           </div>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       HOW IT WORKS
-  ═══════════════════════════════════════════ -->
-  <section class="py-24 relative overflow-hidden bg-gradient-to-b from-dark-bg via-purple-950/10 to-dark-bg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-4 reveal">
-          How It <span class="gradient-text">Works</span>
-        </h2>
-        <p class="text-slate-400 text-lg max-w-xl mx-auto reveal reveal-delay-1">Three simple steps to turn your habits into an adventure.</p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-8 relative">
-        <!-- Connecting Line (desktop) -->
-        <div class="hidden md:block absolute top-10 left-1/4 right-1/4 h-px bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-purple opacity-30"></div>
-
-        <!-- Step 1 -->
-        <div class="text-center reveal">
-          <div class="relative inline-flex mb-6">
-            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-4xl glow-purple">
-              📋
-            </div>
-            <div class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-neon-purple text-white text-xs font-black flex items-center justify-center">1</div>
-          </div>
-          <h3 class="font-display font-bold text-xl text-white mb-3">Set Your Quests</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">Add your daily routines as quests. Set difficulty, frequency, and rewards. Import popular routines from the community.</p>
-        </div>
-
-        <!-- Step 2 -->
-        <div class="text-center reveal reveal-delay-1">
-          <div class="relative inline-flex mb-6">
-            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center text-4xl glow-cyan">
-              ✅
-            </div>
-            <div class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-neon-cyan text-dark-bg text-xs font-black flex items-center justify-center">2</div>
-          </div>
-          <h3 class="font-display font-bold text-xl text-white mb-3">Complete & Earn</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">Complete quests and earn EXP + Gold. Take AR proof photos and share them with the community for bonus rewards.</p>
-        </div>
-
-        <!-- Step 3 -->
-        <div class="text-center reveal reveal-delay-2">
-          <div class="relative inline-flex mb-6">
-            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-600 to-pink-800 flex items-center justify-center text-4xl" style="box-shadow: 0 0 30px rgba(236,72,153,0.4)">
-              🚀
-            </div>
-            <div class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-neon-pink text-white text-xs font-black flex items-center justify-center">3</div>
-          </div>
-          <h3 class="font-display font-bold text-xl text-white mb-3">Level Up & Dominate</h3>
-          <p class="text-slate-400 text-sm leading-relaxed">Watch your character grow stronger. Challenge others in PVP, climb the leaderboard, and become the ultimate habit champion.</p>
-        </div>
-      </div>
+    <!-- Stats counter -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 pt-12 border-t border-purple-900/30">
+      <div class="text-center"><p class="counter-num text-3xl font-black grad-text" data-target="50000" data-suffix="K+">0</p><p class="text-gray-500 text-sm mt-1">활성 퀘스터</p></div>
+      <div class="text-center"><p class="counter-num text-3xl font-black grad-text" data-target="2000000" data-suffix="M+">0</p><p class="text-gray-500 text-sm mt-1">완료된 퀘스트</p></div>
+      <div class="text-center"><p class="counter-num text-3xl font-black grad-text" data-target="98" data-suffix="%">0</p><p class="text-gray-500 text-sm mt-1">만족도</p></div>
+      <div class="text-center"><p class="counter-num text-3xl font-black grad-text" data-target="49" data-suffix="★">0</p><p class="text-gray-500 text-sm mt-1">앱스토어 평점</p></div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ═══════════════════════════════════════════
-       APP SHOWCASE
-  ═══════════════════════════════════════════ -->
-  <section id="showcase" class="py-24 relative overflow-hidden">
-    <div class="orb w-96 h-96 bg-cyan-700 opacity-10 top-0 -left-20"></div>
+<!-- ════════════════════════════════════════
+     PROBLEM — 왜 이 앱인가?
+════════════════════════════════════════ -->
+<section id="problem" class="relative py-24 px-6" style="z-index:1">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <p class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3">문제제기</p>
+      <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+        왜 <span class="grad-text">이 앱</span>인가?
+      </h2>
+      <div class="w-24 h-1 mx-auto rounded-full" style="background:linear-gradient(90deg,#7c3aed,#06b6d4)"></div>
+    </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-2 gap-16 items-center">
-
-        <!-- Left: Character Image -->
-        <div class="relative flex justify-center reveal">
-          <div class="relative w-64 sm:w-80">
-            <div class="absolute inset-0 bg-purple-500 opacity-25 blur-3xl rounded-full"></div>
-            <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663665192860/Wikxk2anuAmLqrPPdcBFwZ/roubit-hero-BJXPe7FdL5pnrstnKPuubR.webp"
-              alt="RouBit Character"
-              class="relative z-10 w-full animate-float drop-shadow-2xl"
-              loading="lazy"
-            />
-            <!-- Orbiting badges -->
-            <div class="absolute top-4 -right-8 z-20 glass-card rounded-xl px-3 py-2 animate-float" style="animation-delay:0.5s">
-              <div class="text-xs text-slate-400">Level</div>
-              <div class="font-display font-black text-xl gradient-text">Lv.15</div>
-            </div>
-            <div class="absolute bottom-12 -left-10 z-20 glass-card rounded-xl px-3 py-2 animate-float-delayed">
-              <div class="text-xs text-slate-400">Gold</div>
-              <div class="font-display font-black text-xl text-yellow-400">2,840 🪙</div>
-            </div>
+    <!-- Benchmarking: Duolingo + Pokemon GO = RouBit -->
+    <div class="reveal mb-16">
+      <p class="text-center text-purple-300 text-sm font-semibold mb-8">✓ 게이미피케이션 성공 사례 벤치마킹 — 언어 학습과 걷기의 성공 공식을 "루틴"에 적용하다</p>
+      <div class="grid md:grid-cols-3 gap-6 items-center">
+        <!-- Duolingo -->
+        <div class="bench-card p-6 text-center">
+          <div class="text-4xl mb-3">🦉</div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-bold text-green-400 text-lg">Duolingo</span>
+            <span class="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded-full">DAU: 90M</span>
           </div>
+          <p class="text-purple-400 text-sm font-semibold mb-3">습관 형성의 심리학</p>
+          <ul class="text-gray-400 text-sm space-y-1 text-left">
+            <li>✓ 연속달성 (스트릭)</li>
+            <li>✓ 리그 방식 경쟁</li>
+            <li>✓ AI 개인화</li>
+          </ul>
         </div>
-
-        <!-- Right: Feature List -->
-        <div class="reveal reveal-delay-1">
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-4">
-            <span class="text-neon-cyan text-xs font-semibold tracking-widest uppercase">App Showcase</span>
+        <!-- Plus sign -->
+        <div class="text-center hidden md:block">
+          <div class="text-6xl font-black text-purple-500">+</div>
+          <p class="text-gray-500 text-sm mt-2">결합</p>
+        </div>
+        <!-- Pokemon GO — shown on mobile with + -->
+        <div class="md:hidden text-center text-4xl text-purple-500 font-black">+</div>
+        <!-- Pokemon GO -->
+        <div class="bench-card p-6 text-center">
+          <div class="text-4xl mb-3">⚡</div>
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-bold text-yellow-400 text-lg">Pokémon GO</span>
+            <span class="text-xs text-gray-400 bg-gray-800 px-2 py-1 rounded-full">DAU: 8M</span>
           </div>
-          <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-6">
-            Your Character,<br/>
-            <span class="gradient-text">Your Story</span>
-          </h2>
-          <p class="text-slate-400 text-lg leading-relaxed mb-8">
-            Every habit you build makes your character stronger. Customize your hero with rare skins, compete in AR battles, and share your journey with the community.
-          </p>
-
-          <div class="space-y-4">
-            <div class="flex items-center gap-4 glass-card rounded-xl p-4 hover:border-purple-500/40 transition-colors">
-              <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-xl flex-shrink-0">🎭</div>
-              <div>
-                <div class="font-semibold text-white text-sm">5 Unique Character Skins</div>
-                <div class="text-slate-400 text-xs">Wizard, Warrior, Ranger, Paladin & more</div>
-              </div>
-              <div class="ml-auto text-neon-purple text-xs font-semibold">Unlock →</div>
-            </div>
-
-            <div class="flex items-center gap-4 glass-card rounded-xl p-4 hover:border-cyan-500/40 transition-colors">
-              <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-xl flex-shrink-0">📍</div>
-              <div>
-                <div class="font-semibold text-white text-sm">Local Leaderboards</div>
-                <div class="text-slate-400 text-xs">Compete with your neighborhood, school & office</div>
-              </div>
-              <div class="ml-auto text-neon-cyan text-xs font-semibold">#1 →</div>
-            </div>
-
-            <div class="flex items-center gap-4 glass-card rounded-xl p-4 hover:border-pink-500/40 transition-colors">
-              <div class="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center text-xl flex-shrink-0">📸</div>
-              <div>
-                <div class="font-semibold text-white text-sm">AR Proof Photos</div>
-                <div class="text-slate-400 text-xs">Capture & share your achievements with AR overlay</div>
-              </div>
-              <div class="ml-auto text-neon-pink text-xs font-semibold">Share →</div>
-            </div>
+          <p class="text-purple-400 text-sm font-semibold mb-3">현실 경험의 확장</p>
+          <ul class="text-gray-400 text-sm space-y-1 text-left">
+            <li>✓ 공간인식 (AR)</li>
+            <li>✓ LBS 시스템</li>
+            <li>✓ 소셜 레이드</li>
+          </ul>
+        </div>
+      </div>
+      <!-- = RouBit -->
+      <div class="mt-8 text-center">
+        <div class="text-4xl font-black text-purple-500 mb-4">=</div>
+        <div class="inline-block rounded-2xl p-6 max-w-md" style="background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(6,182,212,0.1));border:2px solid rgba(168,85,247,0.5)">
+          <div class="flex items-center justify-center gap-2 mb-3">
+            <span class="text-2xl">🐰</span>
+            <span class="font-orbitron font-bold text-white text-xl">RouBit</span>
+          </div>
+          <p class="text-purple-300 text-sm font-semibold mb-3">완벽한 도파민 루프</p>
+          <div class="grid grid-cols-3 gap-3 text-xs text-gray-300">
+            <div class="rounded-lg p-2" style="background:rgba(168,85,247,0.15)">체감형 공동체</div>
+            <div class="rounded-lg p-2" style="background:rgba(6,182,212,0.15)">상호작용 & 커뮤니케이션</div>
+            <div class="rounded-lg p-2" style="background:rgba(236,72,153,0.15)">확실한 보상시스템</div>
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- ═══════════════════════════════════════════
-       TESTIMONIALS
-  ═══════════════════════════════════════════ -->
-  <section id="testimonials" class="py-24 relative overflow-hidden bg-gradient-to-b from-dark-bg via-purple-950/10 to-dark-bg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center mb-16">
-        <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-4 reveal">
-          What <span class="gradient-text">Questers Say</span>
-        </h2>
-        <p class="text-slate-400 text-lg reveal reveal-delay-1">Real stories from real habit heroes.</p>
-      </div>
-
+    <!-- 루틴 유지의 힘 2: 상호작용 & 몰입감 -->
+    <div class="reveal">
+      <p class="text-purple-300 text-sm font-semibold mb-6">2) 루틴 유지의 힘 2 : <span class="text-cyan-400">상호작용 & 몰입감</span></p>
       <div class="grid md:grid-cols-3 gap-6">
-        <!-- Testimonial 1 -->
-        <div class="testimonial-card rounded-2xl p-6 reveal">
-          <div class="flex items-center gap-1 mb-4">
-            <span class="text-yellow-400 text-sm">★★★★★</span>
+        <div class="feature-card p-6 text-center">
+          <div class="ar-img mb-4 h-40 flex items-center justify-center text-6xl" style="background:linear-gradient(135deg,rgba(34,197,94,0.2),rgba(168,85,247,0.2))">🌿🐉</div>
+          <p class="text-white text-sm font-semibold leading-relaxed">루틴 수행을 통한 나의 레벨업이<br/>즉, 나의 캐릭터 레벨업</p>
+        </div>
+        <div class="feature-card p-6 text-center">
+          <div class="ar-img mb-4 h-40 flex items-center justify-center text-6xl" style="background:linear-gradient(135deg,rgba(6,182,212,0.2),rgba(168,85,247,0.2))">🤸📱</div>
+          <p class="text-white text-sm font-semibold leading-relaxed">인체 맵핑 기술을 통해 실시간<br/>운동 코칭 및 기록 가능</p>
+        </div>
+        <div class="feature-card p-6 text-center">
+          <div class="ar-img mb-4 h-40 flex items-center justify-center text-6xl" style="background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(168,85,247,0.2))">📍⚔️</div>
+          <p class="text-white text-sm font-semibold leading-relaxed">위치 기반 서비스(LBS)를<br/>활용하여 인근 유저와 배틀</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     FEATURES — 핵심 기능 (탭 방식)
+════════════════════════════════════════ -->
+<section id="features" class="relative py-24 px-6" style="z-index:1;background:linear-gradient(180deg,transparent,rgba(168,85,247,0.03),transparent)">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-12 reveal">
+      <p class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3">핵심 기능</p>
+      <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+        퀘스터들이 <span class="grad-text">RouBit을 사랑하는</span> 이유
+      </h2>
+      <p class="text-gray-400 max-w-xl mx-auto">모든 기능은 습관 형성을 지루한 의무가 아닌 짜릿한 모험으로 만들기 위해 설계되었습니다.</p>
+    </div>
+
+    <!-- Tab buttons -->
+    <div class="flex flex-wrap justify-center gap-2 mb-10 reveal">
+      <button class="tab-btn active px-5 py-2 text-sm font-semibold text-gray-400 rounded-full" data-tab="quest" style="background:rgba(168,85,247,0.1)">⚔️ 퀘스트 루틴</button>
+      <button class="tab-btn px-5 py-2 text-sm font-semibold text-gray-400 rounded-full" data-tab="level" style="background:rgba(168,85,247,0.1)">🏆 레벨업 & 보상</button>
+      <button class="tab-btn px-5 py-2 text-sm font-semibold text-gray-400 rounded-full" data-tab="streak" style="background:rgba(168,85,247,0.1)">📊 스트릭 & 통계</button>
+      <button class="tab-btn px-5 py-2 text-sm font-semibold text-gray-400 rounded-full" data-tab="ar" style="background:rgba(168,85,247,0.1)">🥽 AR 캐릭터</button>
+      <button class="tab-btn px-5 py-2 text-sm font-semibold text-gray-400 rounded-full" data-tab="pvp" style="background:rgba(168,85,247,0.1)">⚡ PVP 배틀</button>
+    </div>
+
+    <!-- Tab panels -->
+    <div class="reveal">
+      <!-- Quest -->
+      <div class="tab-panel active" id="tab-quest">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="text-5xl mb-4">⚔️</div>
+            <h3 class="text-3xl font-black text-white mb-4">퀘스트형 루틴</h3>
+            <p class="text-gray-400 mb-6 leading-relaxed">지루한 일상 과제를 흥미진진한 게임 퀘스트로 변환합니다. 각 루틴은 명확한 목표, 난이도 레벨, 그리고 달성 시 에픽 보상이 주어지는 미션이 됩니다.</p>
+            <ul class="space-y-3">
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs">✓</span>난이도별 차등 EXP 보상</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs">✓</span>일간·주간·커스텀 퀘스트</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs">✓</span>커뮤니티 인기 루틴 가져오기</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs">✓</span>PVP 패배 시 의무 루틴 부여</li>
+            </ul>
           </div>
-          <p class="text-slate-300 text-sm leading-relaxed mb-5">
-            "I've tried every habit app out there. RouBit is the ONLY one that actually kept me engaged for more than a week. The PVP system is genius — I can't let my friends beat me!"
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center font-bold text-white">J</div>
-            <div>
-              <div class="text-white font-semibold text-sm">Jimin K.</div>
-              <div class="text-slate-500 text-xs">Software Engineer · Lv.28</div>
+          <div class="feature-card p-6">
+            <p class="text-purple-400 text-xs font-bold mb-4">오늘의 퀘스트 보드</p>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(168,85,247,0.1)">
+                <span class="text-2xl">💧</span>
+                <div class="flex-1"><p class="text-white text-sm font-semibold">물 8잔 마시기</p><p class="text-gray-500 text-xs">쉬움 · +30 EXP · +10 골드</p></div>
+                <span class="text-green-400 text-lg">✓</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded-lg" style="background:rgba(6,182,212,0.1)">
+                <span class="text-2xl">🏃</span>
+                <div class="flex-1"><p class="text-white text-sm font-semibold">30분 달리기</p><p class="text-gray-500 text-xs">보통 · +80 EXP · +30 골드</p></div>
+                <span class="text-gray-600 text-lg">○</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded-lg border border-red-500/30" style="background:rgba(239,68,68,0.05)">
+                <span class="text-2xl">📚</span>
+                <div class="flex-1"><p class="text-white text-sm font-semibold">독서 20분</p><p class="text-red-400 text-xs">⚠️ 패널티 루틴 · 3일 의무</p></div>
+                <span class="text-gray-600 text-lg">○</span>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Testimonial 2 -->
-        <div class="testimonial-card rounded-2xl p-6 reveal reveal-delay-1">
-          <div class="flex items-center gap-1 mb-4">
-            <span class="text-yellow-400 text-sm">★★★★★</span>
+      <!-- Level Up -->
+      <div class="tab-panel" id="tab-level">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="text-5xl mb-4">🏆</div>
+            <h3 class="text-3xl font-black text-white mb-4">레벨업 & 캐릭터 성장</h3>
+            <p class="text-gray-400 mb-6 leading-relaxed">루틴을 완료할수록 EXP와 골드를 획득합니다. 캐릭터 레벨이 오르고, 희귀 스킨을 해금하며, 나만의 영웅을 커스터마이징하세요.</p>
+            <ul class="space-y-3">
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center text-xs">✓</span>5종 고유 캐릭터 스킨 (마법사·전사·레인저·성기사)</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center text-xs">✓</span>골드로 먹이 주기 → 친밀도 상승</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-cyan-500 flex items-center justify-center text-xs">✓</span>레벨 기반 PVP 전투력 계산</li>
+            </ul>
           </div>
-          <p class="text-slate-300 text-sm leading-relaxed mb-5">
-            "The AR character feature is so cool! I put my character on my hand every morning after my workout. It's become my favorite part of the day. 30-day streak and counting! 🔥"
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-400 flex items-center justify-center font-bold text-white">S</div>
-            <div>
-              <div class="text-white font-semibold text-sm">Sarah M.</div>
-              <div class="text-slate-500 text-xs">Fitness Coach · Lv.41</div>
+          <div class="feature-card p-6">
+            <div class="flex items-center gap-4 mb-6">
+              <div class="w-16 h-16 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">🧙</div>
+              <div>
+                <p class="text-white font-bold">나의 캐릭터</p>
+                <p class="text-purple-400 text-sm">Lv. 12 마법사</p>
+              </div>
+              <div class="ml-auto text-right">
+                <p class="text-yellow-400 text-sm font-bold">🪙 1,240</p>
+                <p class="text-gray-500 text-xs">보유 골드</p>
+              </div>
+            </div>
+            <div class="mb-4">
+              <div class="flex justify-between text-xs mb-1"><span class="text-gray-400">EXP</span><span class="text-purple-400">720 / 1000</span></div>
+              <div class="h-3 rounded-full w-full" style="background:rgba(255,255,255,0.1)">
+                <div class="exp-bar h-3 rounded-full" style="width:72%"></div>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="rounded-lg p-2" style="background:rgba(168,85,247,0.1)"><p class="text-purple-400 font-bold text-lg">87</p><p class="text-gray-500 text-xs">전투력</p></div>
+              <div class="rounded-lg p-2" style="background:rgba(6,182,212,0.1)"><p class="text-cyan-400 font-bold text-lg">73%</p><p class="text-gray-500 text-xs">달성률</p></div>
+              <div class="rounded-lg p-2" style="background:rgba(236,72,153,0.1)"><p class="text-pink-400 font-bold text-lg">❤️ 85</p><p class="text-gray-500 text-xs">친밀도</p></div>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Testimonial 3 -->
-        <div class="testimonial-card rounded-2xl p-6 reveal reveal-delay-2">
-          <div class="flex items-center gap-1 mb-4">
-            <span class="text-yellow-400 text-sm">★★★★★</span>
+      <!-- Streak -->
+      <div class="tab-panel" id="tab-streak">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="text-5xl mb-4">📊</div>
+            <h3 class="text-3xl font-black text-white mb-4">스트릭 & 통계</h3>
+            <p class="text-gray-400 mb-6 leading-relaxed">아름다운 시각화 통계가 동기를 유지시켜 줍니다. 스트릭, 달성률, 커뮤니티 랭킹을 한눈에 확인하세요.</p>
+            <ul class="space-y-3">
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center text-xs">✓</span>연속 달성 스트릭 시각화</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center text-xs">✓</span>동네·회사·학교 로컬 랭킹</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-pink-500 flex items-center justify-center text-xs">✓</span>주간·월간 달성 히트맵</li>
+            </ul>
           </div>
-          <p class="text-slate-300 text-sm leading-relaxed mb-5">
-            "My whole office uses RouBit now. We have a company leaderboard and it's created this amazing culture of healthy competition. Productivity is up 40% — no joke."
-          </p>
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center font-bold text-white">T</div>
-            <div>
-              <div class="text-white font-semibold text-sm">Taeyang P.</div>
-              <div class="text-slate-500 text-xs">Product Manager · Lv.35</div>
+          <div class="feature-card p-6">
+            <p class="text-pink-400 text-xs font-bold mb-4">이번 주 스트릭</p>
+            <div class="flex gap-2 mb-6">
+              <div class="streak-dot done">🔥</div>
+              <div class="streak-dot done">🔥</div>
+              <div class="streak-dot done">🔥</div>
+              <div class="streak-dot done">🔥</div>
+              <div class="streak-dot done">🔥</div>
+              <div class="streak-dot done">🔥</div>
+              <div class="streak-dot done">🔥</div>
+              <div class="streak-dot miss">·</div>
+              <div class="streak-dot miss">·</div>
+            </div>
+            <p class="text-white font-bold mb-4">🔥 7일 연속 달성!</p>
+            <p class="text-purple-400 text-xs font-bold mb-3">동네 랭킹</p>
+            <div class="space-y-2">
+              <div class="flex items-center gap-3 p-2 rounded-lg" style="background:rgba(255,215,0,0.1)">
+                <span class="text-yellow-400 font-bold text-sm w-6">🥇</span>
+                <span class="text-white text-sm flex-1">김민준</span>
+                <span class="text-yellow-400 text-xs">98%</span>
+              </div>
+              <div class="flex items-center gap-3 p-2 rounded-lg" style="background:rgba(168,85,247,0.15);border:1px solid rgba(168,85,247,0.3)">
+                <span class="text-purple-400 font-bold text-sm w-6">🥈</span>
+                <span class="text-white text-sm flex-1">나 (Lv.12)</span>
+                <span class="text-purple-400 text-xs">73%</span>
+              </div>
+              <div class="flex items-center gap-3 p-2 rounded-lg" style="background:rgba(255,255,255,0.03)">
+                <span class="text-orange-400 font-bold text-sm w-6">🥉</span>
+                <span class="text-white text-sm flex-1">이서연</span>
+                <span class="text-gray-400 text-xs">61%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AR -->
+      <div class="tab-panel" id="tab-ar">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="text-5xl mb-4">🥽</div>
+            <h3 class="text-3xl font-black text-white mb-4">AR 캐릭터 시스템</h3>
+            <p class="text-gray-400 mb-6 leading-relaxed">스마트폰 카메라로 현실 공간에 나만의 캐릭터를 소환합니다. 손 위에 캐릭터를 올리고, 루틴 인증 사진을 찍어 커뮤니티에 공유하세요.</p>
+            <ul class="space-y-3">
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs">✓</span>손 인식 AR 소환 (MediaPipe Hands)</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs">✓</span>AR 인증 사진 캡처 & 공유</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs">✓</span>인체 맵핑 기반 실시간 운동 코칭</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center text-xs">✓</span>위치 기반 주변 유저 탐색</li>
+            </ul>
+          </div>
+          <div class="feature-card p-6 text-center">
+            <div class="rounded-2xl h-48 flex items-center justify-center mb-4 relative overflow-hidden" style="background:linear-gradient(135deg,rgba(168,85,247,0.2),rgba(6,182,212,0.1))">
+              <div class="text-8xl">🥽</div>
+              <div class="absolute bottom-4 left-4 right-4 rounded-lg p-2 text-xs text-white font-semibold" style="background:rgba(0,0,0,0.6)">📸 AR 인증 사진 → 커뮤니티 공유</div>
+            </div>
+            <p class="text-gray-400 text-sm">손바닥 위에 캐릭터 소환 · 전/후면 카메라 전환 · 파티클 이펙트</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- PVP -->
+      <div class="tab-panel" id="tab-pvp">
+        <div class="grid md:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="text-5xl mb-4">⚡</div>
+            <h3 class="text-3xl font-black text-white mb-4">PVP AR 배틀 모드</h3>
+            <p class="text-gray-400 mb-6 leading-relaxed">주변 유저를 GPS로 탐색하거나 온라인 매칭으로 AR 배틀을 벌입니다. 패배자는 승자가 지정한 루틴을 3일간 의무 수행해야 합니다.</p>
+            <ul class="space-y-3">
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center text-xs">✓</span>GPS 기반 주변 유저 레이더</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center text-xs">✓</span>전투력 = 캐릭터 레벨 × 루틴 달성률</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center text-xs">✓</span>패배 시 의무 루틴 3일 강제 수행</li>
+              <li class="flex items-center gap-3 text-gray-300"><span class="w-6 h-6 rounded-full bg-red-500 flex items-center justify-center text-xs">✓</span>승리 시 EXP·골드·배지 획득</li>
+            </ul>
+          </div>
+          <div class="feature-card p-6">
+            <p class="text-red-400 text-xs font-bold mb-4">⚡ 배틀 진행 중</p>
+            <div class="flex items-center justify-between mb-4">
+              <div class="text-center">
+                <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl mx-auto mb-1" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">🧙</div>
+                <p class="text-white text-xs font-bold">나 (Lv.12)</p>
+                <p class="text-purple-400 text-xs">전투력 87</p>
+              </div>
+              <div class="text-center">
+                <p class="text-red-400 font-black text-2xl">VS</p>
+                <div class="h-1 w-16 rounded-full mt-1" style="background:linear-gradient(90deg,#7c3aed,#ef4444)"></div>
+              </div>
+              <div class="text-center">
+                <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl mx-auto mb-1" style="background:linear-gradient(135deg,#ef4444,#f97316)">⚔️</div>
+                <p class="text-white text-xs font-bold">이서연 (Lv.15)</p>
+                <p class="text-red-400 text-xs">전투력 112</p>
+              </div>
+            </div>
+            <div class="rounded-lg p-3 text-center text-xs" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3)">
+              <p class="text-red-400 font-semibold">패배 시 의무 루틴</p>
+              <p class="text-white mt-1">📚 매일 독서 30분 (3일)</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- ═══════════════════════════════════════════
-       DOWNLOAD CTA
-  ═══════════════════════════════════════════ -->
-  <section id="download" class="py-24 relative overflow-hidden">
-    <div class="orb w-[600px] h-[600px] bg-purple-700 opacity-15 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
-
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
-      <div class="gradient-border p-10 sm:p-16 reveal">
-        <div class="text-6xl mb-6 animate-float">🐰</div>
-        <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-4">
-          Ready to Start Your<br/>
-          <span class="gradient-text">Epic Journey?</span>
-        </h2>
-        <p class="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
-          Join 50,000+ questers who turned their boring routines into legendary habits. Free to download. No subscription required.
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-          <a href="#" class="shimmer-btn flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white text-base group hover:scale-105 transition-transform">
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
-            </svg>
-            <div class="text-left">
-              <div class="text-xs opacity-80">Download on the</div>
-              <div class="font-bold text-lg">App Store</div>
-            </div>
-          </a>
-
-          <a href="#" class="btn-secondary flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white text-base group hover:scale-105 transition-transform">
-            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3.18 23.76c.3.17.64.22.97.14l12.49-7.17-2.79-2.79-10.67 9.82zm-1.59-20.4C1.24 3.72 1 4.18 1 4.78v14.44c0 .6.24 1.06.59 1.42l.07.07 8.09-8.09v-.19L1.59 3.36zm18.12 8.3l-2.55-1.47-3.07 3.07 3.07 3.07 2.57-1.48c.73-.42.73-1.11 0-1.53l-.02-.66zm-17.1 10.32L14.1 14.5l-2.79-2.79L2.61 21.98z"/>
-            </svg>
-            <div class="text-left">
-              <div class="text-xs opacity-80">Get it on</div>
-              <div class="font-bold text-lg">Google Play</div>
-            </div>
-          </a>
-        </div>
-
-        <p class="text-slate-500 text-sm">
-          ✨ Free forever · No credit card · Available on iOS & Android
-        </p>
-      </div>
+<!-- ════════════════════════════════════════
+     REWARDS — 확실한 보상 시스템
+════════════════════════════════════════ -->
+<section id="rewards" class="relative py-24 px-6" style="z-index:1">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <p class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3">루틴 유지의 힘 3</p>
+      <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+        <span class="grad-text">확실한 보상 시스템</span>
+      </h2>
+      <p class="text-gray-400 max-w-xl mx-auto">루틴을 지속할수록 현실에서도 가치 있는 보상이 돌아옵니다. 단순한 앱 내 포인트가 아닌, 삶을 바꾸는 진짜 보상입니다.</p>
+      <div class="w-24 h-1 mx-auto rounded-full mt-4" style="background:linear-gradient(90deg,#7c3aed,#06b6d4)"></div>
     </div>
-  </section>
 
-  <!-- ═══════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════ -->
-  <footer class="border-t border-dark-border py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid md:grid-cols-4 gap-8 mb-10">
-        <!-- Brand -->
-        <div class="md:col-span-2">
-          <div class="flex items-center gap-2 mb-4">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center text-base font-black text-white">R</div>
-            <span class="font-display font-bold text-2xl gradient-text">RouBit</span>
-          </div>
-          <p class="text-slate-400 text-sm leading-relaxed max-w-xs mb-5">
-            Turn your daily routine into an epic quest. Build habits, level up your character, and dominate the leaderboard.
-          </p>
-          <!-- Social Icons -->
-          <div class="flex gap-3">
-            <a href="#" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-slate-400 hover:text-neon-purple transition-colors" aria-label="Twitter/X">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            </a>
-            <a href="#" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-slate-400 hover:text-neon-pink transition-colors" aria-label="Instagram">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-            </a>
-            <a href="#" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-slate-400 hover:text-neon-cyan transition-colors" aria-label="Discord">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-            </a>
-            <a href="#" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-slate-400 hover:text-white transition-colors" aria-label="GitHub">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
-            </a>
-          </div>
-        </div>
-
-        <!-- Links -->
-        <div>
-          <h4 class="font-semibold text-white mb-4 text-sm">Product</h4>
-          <ul class="space-y-2">
-            <li><a href="#features" class="text-slate-400 hover:text-white text-sm transition-colors">Features</a></li>
-            <li><a href="#showcase" class="text-slate-400 hover:text-white text-sm transition-colors">App Showcase</a></li>
-            <li><a href="#download" class="text-slate-400 hover:text-white text-sm transition-colors">Download</a></li>
-            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Changelog</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 class="font-semibold text-white mb-4 text-sm">Legal</h4>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Privacy Policy</a></li>
-            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Terms of Service</a></li>
-            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Cookie Policy</a></li>
-            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Contact Us</a></li>
-          </ul>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 reveal">
+      <!-- 가상 성장 -->
+      <div class="reward-card p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(168,85,247,0.1));border:1px solid rgba(168,85,247,0.4)">↑</div>
+        <h3 class="text-xl font-black text-purple-400 mb-3">가상 성장</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">캐릭터 레벨업 및 스탯 상승을 통한 디지털 자아의 가시적 성장 경험 제공</p>
+        <div class="mt-4 pt-4 border-t border-purple-900/30 space-y-2">
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>캐릭터 레벨 & 스탯</div>
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>희귀 스킨 해금</div>
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>업적 배지 컬렉션</div>
         </div>
       </div>
 
-      <!-- Bottom Bar -->
-      <div class="border-t border-dark-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <p class="text-slate-500 text-sm">© 2025 RouBit. All rights reserved. Made with ❤️ for habit heroes.</p>
-        <div class="flex items-center gap-2">
-          <span class="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></span>
-          <span class="text-slate-500 text-xs">All systems operational</span>
+      <!-- 경제적 가치 -->
+      <div class="reward-card p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(168,85,247,0.1));border:1px solid rgba(168,85,247,0.4)">🪙</div>
+        <h3 class="text-xl font-black text-purple-400 mb-3">경제적 가치</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">PvP 전투 코인을 기프티콘 및 현금으로 전환하여 실질적인 자산 가치 부여</p>
+        <div class="mt-4 pt-4 border-t border-purple-900/30 space-y-2">
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>기프티콘 교환</div>
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>현금 전환 가능</div>
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>NFT 아이템 (예정)</div>
+        </div>
+      </div>
+
+      <!-- 생애 보상 -->
+      <div class="reward-card p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(168,85,247,0.1));border:1px solid rgba(168,85,247,0.4)">🏅</div>
+        <h3 class="text-xl font-black text-purple-400 mb-3">생애 보상</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">자격증 취득, 취업 등 주요 인생 마일스톤 달성 시 상금 지원을 통한 성취 강화</p>
+        <div class="mt-4 pt-4 border-t border-purple-900/30 space-y-2">
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>자격증 취득 보상</div>
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>취업 성공 지원금</div>
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>마일스톤 상금</div>
+        </div>
+      </div>
+
+      <!-- 웰니스 베네핏 -->
+      <div class="reward-card p-6 text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-3xl" style="background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(168,85,247,0.1));border:1px solid rgba(168,85,247,0.4)">🤝</div>
+        <h3 class="text-xl font-black text-purple-400 mb-3">웰니스 베네핏</h3>
+        <p class="text-gray-400 text-sm leading-relaxed">제휴사 연계 보험료 할인 및 운동 시설 바우처 제공으로 건강한 삶 지원</p>
+        <div class="mt-4 pt-4 border-t border-purple-900/30 space-y-2">
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>보험료 할인 혜택</div>
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>헬스장 바우처</div>
+          <div class="flex items-center gap-2 text-xs text-gray-400"><span class="text-purple-400">✓</span>건강 제품 할인</div>
         </div>
       </div>
     </div>
-  </footer>
 
-  <!-- ═══════════════════════════════════════════
-       JAVASCRIPT
-  ═══════════════════════════════════════════ -->
-  <script>
-    // ── Mobile Menu ──────────────────────────────
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const menuIcon = document.getElementById('menu-icon');
-    const closeIcon = document.getElementById('close-icon');
-    let menuOpen = false;
+    <!-- Reward flow diagram -->
+    <div class="mt-12 reveal">
+      <div class="rounded-2xl p-6 md:p-8" style="background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(6,182,212,0.05));border:1px solid rgba(168,85,247,0.2)">
+        <p class="text-center text-white font-bold mb-6">보상 흐름도</p>
+        <div class="flex flex-wrap justify-center items-center gap-3 text-sm">
+          <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(168,85,247,0.2);border:1px solid rgba(168,85,247,0.4)">
+            <p class="text-2xl mb-1">📋</p><p class="text-white font-semibold">루틴 수행</p>
+          </div>
+          <span class="text-purple-400 text-xl">→</span>
+          <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(6,182,212,0.2);border:1px solid rgba(6,182,212,0.4)">
+            <p class="text-2xl mb-1">⚡</p><p class="text-white font-semibold">EXP + 골드</p>
+          </div>
+          <span class="text-purple-400 text-xl">→</span>
+          <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(236,72,153,0.2);border:1px solid rgba(236,72,153,0.4)">
+            <p class="text-2xl mb-1">🏆</p><p class="text-white font-semibold">레벨업</p>
+          </div>
+          <span class="text-purple-400 text-xl">→</span>
+          <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4)">
+            <p class="text-2xl mb-1">🪙</p><p class="text-white font-semibold">현금/기프티콘</p>
+          </div>
+          <span class="text-purple-400 text-xl">→</span>
+          <div class="rounded-xl px-4 py-3 text-center" style="background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4)">
+            <p class="text-2xl mb-1">🌟</p><p class="text-white font-semibold">생애 보상</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    menuBtn.addEventListener('click', () => {
-      menuOpen = !menuOpen;
-      mobileMenu.classList.toggle('open', menuOpen);
-      menuIcon.classList.toggle('hidden', menuOpen);
-      closeIcon.classList.toggle('hidden', !menuOpen);
-    });
+<!-- ════════════════════════════════════════
+     HOW IT WORKS
+════════════════════════════════════════ -->
+<section class="relative py-24 px-6" style="z-index:1;background:linear-gradient(180deg,transparent,rgba(6,182,212,0.03),transparent)">
+  <div class="max-w-4xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <h2 class="text-4xl font-black text-white mb-4">어떻게 <span class="grad-text-2">작동하나요?</span></h2>
+      <p class="text-gray-400">3단계로 습관을 모험으로 바꾸세요.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8 reveal">
+      <div class="text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-2xl relative" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">
+          📋<span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-purple-900 border border-purple-500 text-xs flex items-center justify-center text-white font-bold">1</span>
+        </div>
+        <h3 class="text-white font-bold text-lg mb-2">퀘스트 설정</h3>
+        <p class="text-gray-400 text-sm">일상 루틴을 퀘스트로 등록하세요. 난이도, 주기, 보상을 설정하고 커뮤니티 인기 루틴을 가져올 수 있습니다.</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-2xl relative" style="background:linear-gradient(135deg,#0891b2,#06b6d4)">
+          ✅<span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-cyan-900 border border-cyan-500 text-xs flex items-center justify-center text-white font-bold">2</span>
+        </div>
+        <h3 class="text-white font-bold text-lg mb-2">완료 & 획득</h3>
+        <p class="text-gray-400 text-sm">퀘스트를 완료하고 EXP와 골드를 획득하세요. AR 인증 사진을 찍어 커뮤니티에 공유하면 보너스 보상이 주어집니다.</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center text-2xl relative" style="background:linear-gradient(135deg,#be185d,#ec4899)">
+          🚀<span class="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-pink-900 border border-pink-500 text-xs flex items-center justify-center text-white font-bold">3</span>
+        </div>
+        <h3 class="text-white font-bold text-lg mb-2">레벨업 & 지배</h3>
+        <p class="text-gray-400 text-sm">캐릭터가 강해질수록 PVP에서 유리해집니다. 리더보드를 정복하고 전설의 퀘스터가 되세요.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    function closeMobileMenu() {
-      menuOpen = false;
-      mobileMenu.classList.remove('open');
-      menuIcon.classList.remove('hidden');
-      closeIcon.classList.add('hidden');
+<!-- ════════════════════════════════════════
+     APP SHOWCASE
+════════════════════════════════════════ -->
+<section id="showcase" class="relative py-24 px-6" style="z-index:1">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <p class="text-purple-400 text-sm font-semibold tracking-widest uppercase mb-3">앱 소개</p>
+      <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+        나만의 캐릭터,<br/><span class="grad-text">나만의 이야기</span>
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 reveal">
+      <div class="feature-card p-6">
+        <div class="text-3xl mb-3">🎭</div>
+        <h3 class="text-white font-bold mb-2">5종 고유 캐릭터 스킨</h3>
+        <p class="text-gray-400 text-sm mb-4">마법사·전사·레인저·성기사·마법사(파랑) — 골드로 해금하고 AR에서 소환하세요.</p>
+        <a href="#download" class="text-purple-400 text-sm font-semibold hover:text-purple-300 transition">해금하기 →</a>
+      </div>
+      <div class="feature-card p-6">
+        <div class="text-3xl mb-3">📍</div>
+        <h3 class="text-white font-bold mb-2">로컬 랭킹보드</h3>
+        <p class="text-gray-400 text-sm mb-4">동네·회사·학교에서 나의 순위를 확인하고 지인들과 건강한 경쟁을 즐기세요.</p>
+        <a href="#download" class="text-purple-400 text-sm font-semibold hover:text-purple-300 transition">1위 도전 →</a>
+      </div>
+      <div class="feature-card p-6">
+        <div class="text-3xl mb-3">📸</div>
+        <h3 class="text-white font-bold mb-2">AR 인증 사진</h3>
+        <p class="text-gray-400 text-sm mb-4">AR 캐릭터와 함께 루틴 인증 사진을 찍고 커뮤니티에 공유하면 좋아요와 보너스 보상을 받습니다.</p>
+        <a href="#download" class="text-purple-400 text-sm font-semibold hover:text-purple-300 transition">공유하기 →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     TESTIMONIALS
+════════════════════════════════════════ -->
+<section id="testimonials" class="relative py-24 px-6" style="z-index:1;background:linear-gradient(180deg,transparent,rgba(168,85,247,0.03),transparent)">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-16 reveal">
+      <h2 class="text-4xl font-black text-white mb-4">퀘스터들의 <span class="grad-text">실제 후기</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 reveal">
+      <div class="feature-card p-6">
+        <p class="text-yellow-400 text-sm mb-4">★★★★★</p>
+        <p class="text-gray-300 text-sm leading-relaxed mb-6">"모든 습관 앱을 써봤는데 RouBit만 1주일 이상 유지됐어요. PVP 시스템이 천재적입니다 — 친구한테 질 수 없잖아요!"</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">J</div>
+          <div><p class="text-white text-sm font-semibold">김지민</p><p class="text-gray-500 text-xs">소프트웨어 엔지니어 · Lv.28</p></div>
+        </div>
+      </div>
+      <div class="feature-card p-6">
+        <p class="text-yellow-400 text-sm mb-4">★★★★★</p>
+        <p class="text-gray-300 text-sm leading-relaxed mb-6">"AR 캐릭터 기능이 너무 신기해요! 매일 아침 운동 후 손 위에 캐릭터 올리고 사진 찍는 게 하루의 루틴이 됐어요. 30일 스트릭 달성! 🔥"</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" style="background:linear-gradient(135deg,#0891b2,#06b6d4)">S</div>
+          <div><p class="text-white text-sm font-semibold">이서연</p><p class="text-gray-500 text-xs">피트니스 코치 · Lv.41</p></div>
+        </div>
+      </div>
+      <div class="feature-card p-6">
+        <p class="text-yellow-400 text-sm mb-4">★★★★★</p>
+        <p class="text-gray-300 text-sm leading-relaxed mb-6">"우리 회사 팀원들이 다 같이 쓰고 있어요. 회사 랭킹 덕분에 건강한 경쟁 문화가 생겼고 생산성이 눈에 띄게 올랐습니다."</p>
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" style="background:linear-gradient(135deg,#be185d,#ec4899)">T</div>
+          <div><p class="text-white text-sm font-semibold">박태양</p><p class="text-gray-500 text-xs">프로덕트 매니저 · Lv.35</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     DOWNLOAD CTA
+════════════════════════════════════════ -->
+<section id="download" class="relative py-24 px-6" style="z-index:1">
+  <div class="max-w-3xl mx-auto text-center reveal">
+    <div class="text-6xl mb-6">🐰</div>
+    <h2 class="text-4xl md:text-5xl font-black text-white mb-4">
+      지금 바로<br/><span class="grad-text">전설의 여정</span>을 시작하세요
+    </h2>
+    <p class="text-gray-400 mb-8">50,000명 이상의 퀘스터가 지루한 루틴을 전설적인 습관으로 바꾸고 있습니다.<br/>무료 다운로드 · 구독 불필요</p>
+    <div class="flex flex-wrap justify-center gap-4 mb-6">
+      <a href="#" class="btn-primary text-white font-bold px-8 py-4 rounded-2xl flex items-center gap-3 text-lg">
+        <span class="text-2xl">🍎</span>
+        <div class="text-left"><p class="text-xs opacity-70">다운로드</p><p class="font-bold">App Store</p></div>
+      </a>
+      <a href="#" class="btn-secondary text-white font-bold px-8 py-4 rounded-2xl flex items-center gap-3 text-lg">
+        <span class="text-2xl">▶</span>
+        <div class="text-left"><p class="text-xs opacity-70">다운로드</p><p class="font-bold">Google Play</p></div>
+      </a>
+    </div>
+    <p class="text-gray-500 text-sm">✨ 영원히 무료 · 신용카드 불필요 · iOS & Android 지원</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════ -->
+<footer class="relative py-12 px-6 border-t" style="z-index:1;border-color:rgba(168,85,247,0.2)">
+  <div class="max-w-6xl mx-auto">
+    <div class="grid md:grid-cols-4 gap-8 mb-8">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center text-lg font-black text-white" style="background:linear-gradient(135deg,#7c3aed,#a855f7)">R</div>
+          <span class="font-orbitron font-bold text-white text-lg">RouBit</span>
+        </div>
+        <p class="text-gray-400 text-sm leading-relaxed mb-4">매일의 루틴을 에픽 퀘스트로 변환합니다.<br/>습관을 키우고, 캐릭터를 레벨업하고, 리더보드를 지배하세요.</p>
+        <div class="flex gap-4">
+          <a href="#" class="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition" style="background:rgba(255,255,255,0.05)" title="Twitter/X">𝕏</a>
+          <a href="#" class="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition" style="background:rgba(255,255,255,0.05)" title="Instagram">📷</a>
+          <a href="#" class="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition" style="background:rgba(255,255,255,0.05)" title="Discord">💬</a>
+          <a href="#" class="w-9 h-9 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition" style="background:rgba(255,255,255,0.05)" title="GitHub">⌨️</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4">제품</h4>
+        <ul class="space-y-2 text-gray-400 text-sm">
+          <li><a href="#features" class="hover:text-purple-400 transition">핵심 기능</a></li>
+          <li><a href="#rewards" class="hover:text-purple-400 transition">보상 시스템</a></li>
+          <li><a href="#showcase" class="hover:text-purple-400 transition">앱 소개</a></li>
+          <li><a href="#download" class="hover:text-purple-400 transition">다운로드</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold mb-4">법적 고지</h4>
+        <ul class="space-y-2 text-gray-400 text-sm">
+          <li><a href="#" class="hover:text-purple-400 transition">개인정보처리방침</a></li>
+          <li><a href="#" class="hover:text-purple-400 transition">서비스 이용약관</a></li>
+          <li><a href="#" class="hover:text-purple-400 transition">쿠키 정책</a></li>
+          <li><a href="#" class="hover:text-purple-400 transition">문의하기</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4" style="border-color:rgba(168,85,247,0.15)">
+      <p class="text-gray-500 text-sm">© 2025 RouBit. All rights reserved. 습관 영웅들을 위해 ❤️로 만들었습니다.</p>
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+        <span class="text-gray-500 text-xs">모든 시스템 정상 운영 중</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ── Particles ──────────────────────────────────────────────────
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function createParticle() {
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: -Math.random() * 0.5 - 0.1,
+    size: Math.random() * 2 + 0.5,
+    opacity: Math.random() * 0.5 + 0.1,
+    color: Math.random() > 0.5 ? '#a855f7' : '#06b6d4'
+  };
+}
+
+for (let i = 0; i < 120; i++) particles.push(createParticle());
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach((p, i) => {
+    p.x += p.vx; p.y += p.vy;
+    if (p.y < -10) { particles[i] = createParticle(); particles[i].y = canvas.height + 10; }
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.opacity;
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ── Hook overlay ──────────────────────────────────────────────
+document.getElementById('hook-cta').addEventListener('click', () => {
+  const overlay = document.getElementById('hook-overlay');
+  overlay.classList.add('hide');
+  setTimeout(() => { overlay.style.display = 'none'; }, 800);
+});
+
+// ── Navbar scroll ─────────────────────────────────────────────
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  nav.classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ── Mobile menu ───────────────────────────────────────────────
+document.getElementById('menu-btn').addEventListener('click', () => {
+  document.getElementById('mobile-menu').classList.toggle('open');
+});
+
+// ── Tabs ──────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  });
+});
+
+// ── Scroll reveal ─────────────────────────────────────────────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ── Counter animation ─────────────────────────────────────────
+function animateCounter(el) {
+  const target = parseInt(el.dataset.target);
+  const suffix = el.dataset.suffix || '';
+  const duration = 2000;
+  const start = performance.now();
+
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.floor(eased * target);
+
+    let display;
+    if (target >= 1000000) display = (current / 1000000).toFixed(1) + suffix;
+    else if (target >= 1000) display = (current / 1000).toFixed(0) + suffix;
+    else if (target === 49) display = (current / 10).toFixed(1) + suffix;
+    else display = current + suffix;
+
+    el.textContent = display;
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+const counterObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting && !e.target.dataset.animated) {
+      e.target.dataset.animated = 'true';
+      animateCounter(e.target);
     }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.counter-num').forEach(el => counterObserver.observe(el));
 
-    // ── Scroll Reveal ─────────────────────────────
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-    // ── Animated Counters ─────────────────────────
-    const counterObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !entry.target.dataset.counted) {
-          entry.target.dataset.counted = 'true';
-          animateCounter(entry.target);
-        }
-      });
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
-
-    function animateCounter(el) {
-      const target = parseFloat(el.dataset.target);
-      const isDecimal = target % 1 !== 0;
-      const duration = 2000;
-      const start = performance.now();
-
-      function update(now) {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const current = target * eased;
-
-        if (target >= 1000000) {
-          el.textContent = (current / 1000000).toFixed(1) + 'M+';
-        } else if (target >= 1000) {
-          el.textContent = Math.floor(current / 1000) + 'K+';
-        } else if (isDecimal) {
-          el.textContent = current.toFixed(1);
-        } else {
-          el.textContent = Math.floor(current) + (target === 98 ? '%' : '');
-        }
-
-        if (progress < 1) requestAnimationFrame(update);
-        else {
-          if (target >= 1000000) el.textContent = (target / 1000000).toFixed(1) + 'M+';
-          else if (target >= 1000) el.textContent = Math.floor(target / 1000) + 'K+';
-          else if (isDecimal) el.textContent = target.toFixed(1);
-          else el.textContent = target + (target === 98 ? '%' : '');
-        }
-      }
-      requestAnimationFrame(update);
-    }
-
-    // ── Particle System ───────────────────────────
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let particles = [];
-    let animFrame;
-
-    function resizeCanvas() {
-      const hero = document.getElementById('hero');
-      canvas.width = hero.offsetWidth;
-      canvas.height = hero.offsetHeight;
-    }
-
-    class Particle {
-      constructor() { this.reset(); }
-      reset() {
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        this.speedX = (Math.random() - 0.5) * 0.4;
-        this.speedY = (Math.random() - 0.5) * 0.4;
-        this.opacity = Math.random() * 0.5 + 0.1;
-        this.color = Math.random() > 0.5 ? '#a855f7' : '#22d3ee';
-      }
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
-      }
-      draw() {
-        ctx.save();
-        ctx.globalAlpha = this.opacity;
-        ctx.fillStyle = this.color;
-        ctx.shadowBlur = 6;
-        ctx.shadowColor = this.color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-      }
-    }
-
-    function initParticles() {
-      resizeCanvas();
-      particles = Array.from({ length: 80 }, () => new Particle());
-    }
-
-    function animateParticles() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach(p => { p.update(); p.draw(); });
-      animFrame = requestAnimationFrame(animateParticles);
-    }
-
-    window.addEventListener('resize', () => {
-      resizeCanvas();
-      particles.forEach(p => p.reset());
-    });
-
-    initParticles();
-    animateParticles();
-
-    // ── Navbar Scroll Effect ──────────────────────
-    window.addEventListener('scroll', () => {
-      const nav = document.querySelector('nav');
-      if (window.scrollY > 50) {
-        nav.style.borderBottomColor = 'rgba(168,85,247,0.2)';
-      } else {
-        nav.style.borderBottomColor = 'rgba(168,85,247,0.1)';
-      }
-    });
-
-    // ── Progress Bar Trigger ──────────────────────
-    const progressObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.animation = 'none';
-          entry.target.offsetHeight; // reflow
-          entry.target.style.animation = '';
-        }
-      });
-    }, { threshold: 0.5 });
-
-    document.querySelectorAll('.progress-bar').forEach(el => progressObserver.observe(el));
-  </script>
+// ── Smooth scroll ─────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  });
+});
+</script>
 </body>
 </html>
