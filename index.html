@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RouBit — Turn Your Daily Routine into an Epic Quest</title>
+  <meta name="description" content="RouBit turns boring daily habits into fun RPG quests. Level up your life, earn rewards, and build streaks that last." />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'neon-purple': '#a855f7',
+            'neon-cyan': '#22d3ee',
+            'neon-pink': '#ec4899',
+            'dark-bg': '#080b14',
+            'dark-card': '#0f1628',
+            'dark-border': '#1e2d4a',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'float-delayed': 'float 6s ease-in-out 2s infinite',
+            'glow-pulse': 'glowPulse 3s ease-in-out infinite',
+            'slide-up': 'slideUp 0.7s ease-out forwards',
+            'fade-in': 'fadeIn 0.8s ease-out forwards',
+            'spin-slow': 'spin 20s linear infinite',
+            'shimmer': 'shimmer 2.5s linear infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-18px)' },
+            },
+            glowPulse: {
+              '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
+              '50%': { opacity: '1', transform: 'scale(1.05)' },
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(40px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' },
+            },
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color: #080b14;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── Neon Glow Utilities ── */
+    .glow-purple { box-shadow: 0 0 30px rgba(168,85,247,0.4), 0 0 60px rgba(168,85,247,0.15); }
+    .glow-cyan   { box-shadow: 0 0 30px rgba(34,211,238,0.4), 0 0 60px rgba(34,211,238,0.15); }
+    .text-glow-purple { text-shadow: 0 0 20px rgba(168,85,247,0.8), 0 0 40px rgba(168,85,247,0.4); }
+    .text-glow-cyan   { text-shadow: 0 0 20px rgba(34,211,238,0.8), 0 0 40px rgba(34,211,238,0.4); }
+
+    /* ── Gradient Text ── */
+    .gradient-text {
+      background: linear-gradient(135deg, #a855f7 0%, #22d3ee 50%, #ec4899 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .gradient-text-2 {
+      background: linear-gradient(90deg, #22d3ee 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Glassmorphism Card ── */
+    .glass-card {
+      background: rgba(15, 22, 40, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(168,85,247,0.2);
+    }
+    .glass-card:hover {
+      border-color: rgba(168,85,247,0.5);
+      box-shadow: 0 0 40px rgba(168,85,247,0.15);
+    }
+
+    /* ── Gradient Borders ── */
+    .gradient-border {
+      position: relative;
+      background: #0f1628;
+      border-radius: 16px;
+    }
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      padding: 1px;
+      background: linear-gradient(135deg, #a855f7, #22d3ee, #ec4899);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* ── CTA Buttons ── */
+    .btn-primary {
+      background: linear-gradient(135deg, #a855f7, #7c3aed);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(168,85,247,0.5); }
+    .btn-primary:hover::after { opacity: 1; }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(34,211,238,0.5);
+      box-shadow: 0 0 20px rgba(34,211,238,0.2);
+      transform: translateY(-2px);
+    }
+
+    /* ── Navbar ── */
+    .navbar {
+      background: rgba(8,11,20,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(168,85,247,0.1);
+    }
+
+    /* ── Background Grid ── */
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(168,85,247,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(168,85,247,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ── Orb Backgrounds ── */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* ── Scroll Reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── Stat Counter ── */
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 800;
+    }
+
+    /* ── Feature Icon Ring ── */
+    .icon-ring {
+      background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(34,211,238,0.1));
+      border: 1px solid rgba(168,85,247,0.3);
+    }
+
+    /* ── Progress Bar Animation ── */
+    .progress-bar {
+      background: linear-gradient(90deg, #a855f7, #22d3ee);
+      animation: progressGrow 2s ease-out forwards;
+      transform-origin: left;
+    }
+    @keyframes progressGrow {
+      from { width: 0%; }
+      to   { width: var(--target-width); }
+    }
+
+    /* ── Shimmer Button ── */
+    .shimmer-btn {
+      background: linear-gradient(90deg, #a855f7 0%, #22d3ee 50%, #a855f7 100%);
+      background-size: 200% auto;
+      animation: shimmer 2.5s linear infinite;
+    }
+
+    /* ── Mobile Menu ── */
+    #mobile-menu {
+      transition: max-height 0.4s ease, opacity 0.4s ease;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+    }
+    #mobile-menu.open {
+      max-height: 400px;
+      opacity: 1;
+    }
+
+    /* ── Particle Canvas ── */
+    #particle-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    /* ── Testimonial Card ── */
+    .testimonial-card {
+      background: rgba(15,22,40,0.8);
+      border: 1px solid rgba(168,85,247,0.15);
+      transition: all 0.3s ease;
+    }
+    .testimonial-card:hover {
+      border-color: rgba(168,85,247,0.4);
+      transform: translateY(-4px);
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #080b14; }
+    ::-webkit-scrollbar-thumb { background: #a855f7; border-radius: 3px; }
+  </style>
+</head>
+<body class="bg-dark-bg">
+
+  <!-- ═══════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════ -->
+  <nav class="navbar fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center text-sm font-black text-white">R</div>
+          <span class="font-display font-bold text-xl gradient-text">RouBit</span>
+        </div>
+
+        <!-- Desktop Nav -->
+        <div class="hidden md:flex items-center gap-8">
+          <a href="#features" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">Features</a>
+          <a href="#showcase" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">App</a>
+          <a href="#testimonials" class="text-slate-400 hover:text-white text-sm font-medium transition-colors">Reviews</a>
+          <a href="#download" class="btn-primary px-5 py-2 rounded-full text-sm font-semibold text-white">Download</a>
+        </div>
+
+        <!-- Mobile Hamburger -->
+        <button id="menu-btn" class="md:hidden text-slate-400 hover:text-white transition-colors" aria-label="Menu">
+          <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden border-t border-dark-border px-4 py-2">
+      <div class="flex flex-col gap-1 pb-4">
+        <a href="#features" class="text-slate-400 hover:text-white py-3 text-sm font-medium transition-colors border-b border-dark-border" onclick="closeMobileMenu()">Features</a>
+        <a href="#showcase" class="text-slate-400 hover:text-white py-3 text-sm font-medium transition-colors border-b border-dark-border" onclick="closeMobileMenu()">App</a>
+        <a href="#testimonials" class="text-slate-400 hover:text-white py-3 text-sm font-medium transition-colors border-b border-dark-border" onclick="closeMobileMenu()">Reviews</a>
+        <a href="#download" class="mt-3 btn-primary px-5 py-3 rounded-full text-sm font-semibold text-white text-center" onclick="closeMobileMenu()">Download Free</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════════ -->
+  <section id="hero" class="relative min-h-screen flex items-center pt-16 overflow-hidden bg-grid">
+    <!-- Background Orbs -->
+    <div class="orb w-96 h-96 bg-purple-600 opacity-20 top-10 -left-32"></div>
+    <div class="orb w-80 h-80 bg-cyan-500 opacity-15 top-32 right-0"></div>
+    <div class="orb w-64 h-64 bg-pink-500 opacity-10 bottom-20 left-1/3"></div>
+
+    <!-- Particle Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+
+        <!-- Left: Text Content -->
+        <div class="text-center lg:text-left">
+          <!-- Badge -->
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-6 reveal">
+            <span class="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></span>
+            <span class="text-xs font-semibold text-neon-cyan tracking-widest uppercase">New · Gamified Habit Tracker</span>
+          </div>
+
+          <!-- Headline -->
+          <h1 class="font-display font-black text-5xl sm:text-6xl lg:text-7xl leading-tight mb-6 reveal reveal-delay-1">
+            Turn Your<br/>
+            <span class="gradient-text">Daily Routine</span><br/>
+            into an<br/>
+            <span class="text-white">Epic Quest!</span>
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="text-slate-400 text-lg sm:text-xl leading-relaxed mb-8 max-w-lg mx-auto lg:mx-0 reveal reveal-delay-2">
+            RouBit transforms boring daily habits into fun RPG quests. Level up your character, earn rewards, and build streaks that actually stick.
+          </p>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10 reveal reveal-delay-3">
+            <a href="#download" class="btn-primary flex items-center justify-center gap-3 px-7 py-4 rounded-2xl font-semibold text-white text-base group">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+              </svg>
+              <div class="text-left">
+                <div class="text-xs opacity-80">Download on the</div>
+                <div class="font-bold">App Store</div>
+              </div>
+            </a>
+
+            <a href="#download" class="btn-secondary flex items-center justify-center gap-3 px-7 py-4 rounded-2xl font-semibold text-white text-base group">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.18 23.76c.3.17.64.22.97.14l12.49-7.17-2.79-2.79-10.67 9.82zm-1.59-20.4C1.24 3.72 1 4.18 1 4.78v14.44c0 .6.24 1.06.59 1.42l.07.07 8.09-8.09v-.19L1.59 3.36zm18.12 8.3l-2.55-1.47-3.07 3.07 3.07 3.07 2.57-1.48c.73-.42.73-1.11 0-1.53l-.02-.66zm-17.1 10.32L14.1 14.5l-2.79-2.79L2.61 21.98z"/>
+              </svg>
+              <div class="text-left">
+                <div class="text-xs opacity-80">Get it on</div>
+                <div class="font-bold">Google Play</div>
+              </div>
+            </a>
+          </div>
+
+          <!-- Social Proof Stats -->
+          <div class="flex items-center gap-6 justify-center lg:justify-start reveal reveal-delay-4">
+            <div class="flex -space-x-3">
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 border-2 border-dark-bg flex items-center justify-center text-xs font-bold">A</div>
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-cyan-400 to-blue-400 border-2 border-dark-bg flex items-center justify-center text-xs font-bold">B</div>
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 border-2 border-dark-bg flex items-center justify-center text-xs font-bold">C</div>
+              <div class="w-9 h-9 rounded-full bg-gradient-to-br from-green-400 to-teal-400 border-2 border-dark-bg flex items-center justify-center text-xs font-bold">D</div>
+            </div>
+            <div>
+              <div class="flex items-center gap-1 mb-0.5">
+                <span class="text-yellow-400 text-sm">★★★★★</span>
+              </div>
+              <p class="text-slate-400 text-xs">Loved by <span class="text-white font-semibold">50,000+</span> questers</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: App Mockup -->
+        <div class="relative flex justify-center lg:justify-end reveal reveal-delay-2">
+          <div class="relative w-72 sm:w-80 lg:w-96 animate-float">
+            <!-- Glow behind mockup -->
+            <div class="absolute inset-0 bg-purple-500 opacity-20 blur-3xl rounded-full scale-75"></div>
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663665192860/Wikxk2anuAmLqrPPdcBFwZ/roubit-mockup-LAo8PkNdHp2NXVReUT5X4d.webp"
+              alt="RouBit App Screenshot"
+              class="relative z-10 w-full drop-shadow-2xl rounded-3xl"
+              loading="eager"
+            />
+            <!-- Floating badges -->
+            <div class="absolute -left-8 top-1/4 z-20 glass-card rounded-2xl px-4 py-3 animate-float-delayed glow-purple">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">⚔️</span>
+                <div>
+                  <div class="text-xs text-slate-400">Quest Done!</div>
+                  <div class="text-sm font-bold text-white">+50 EXP</div>
+                </div>
+              </div>
+            </div>
+            <div class="absolute -right-6 bottom-1/3 z-20 glass-card rounded-2xl px-4 py-3 animate-float glow-cyan" style="animation-delay:1s">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🔥</span>
+                <div>
+                  <div class="text-xs text-slate-400">Streak</div>
+                  <div class="text-sm font-bold text-white">7 Days!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Wave -->
+    <div class="absolute bottom-0 left-0 right-0">
+      <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0 80L1440 80L1440 40C1200 80 960 0 720 40C480 80 240 0 0 40L0 80Z" fill="#080b14"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       STATS BAND
+  ═══════════════════════════════════════════ -->
+  <section class="py-16 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-dark-bg to-cyan-900/20"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center reveal">
+          <div class="stat-number text-4xl sm:text-5xl gradient-text mb-2" data-target="50000">0</div>
+          <p class="text-slate-400 text-sm">Active Questers</p>
+        </div>
+        <div class="text-center reveal reveal-delay-1">
+          <div class="stat-number text-4xl sm:text-5xl gradient-text-2 mb-2" data-target="2000000">0</div>
+          <p class="text-slate-400 text-sm">Quests Completed</p>
+        </div>
+        <div class="text-center reveal reveal-delay-2">
+          <div class="stat-number text-4xl sm:text-5xl gradient-text mb-2" data-target="98">0</div>
+          <p class="text-slate-400 text-sm">% Satisfaction Rate</p>
+        </div>
+        <div class="text-center reveal reveal-delay-3">
+          <div class="stat-number text-4xl sm:text-5xl gradient-text-2 mb-2" data-target="4.9">0</div>
+          <p class="text-slate-400 text-sm">App Store Rating ⭐</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FEATURES SECTION
+  ═══════════════════════════════════════════ -->
+  <section id="features" class="py-24 relative overflow-hidden">
+    <div class="orb w-96 h-96 bg-purple-700 opacity-10 -top-20 -right-20"></div>
+    <div class="orb w-64 h-64 bg-cyan-600 opacity-10 bottom-0 -left-10"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Section Header -->
+      <div class="text-center mb-16">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-4 reveal">
+          <span class="text-neon-purple text-xs font-semibold tracking-widest uppercase">Core Features</span>
+        </div>
+        <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-4 reveal reveal-delay-1">
+          Why Questers <span class="gradient-text">Love RouBit</span>
+        </h2>
+        <p class="text-slate-400 text-lg max-w-2xl mx-auto reveal reveal-delay-2">
+          Every feature is designed to make habit-building feel less like a chore and more like an adventure.
+        </p>
+      </div>
+
+      <!-- Feature Cards Grid -->
+      <div class="grid md:grid-cols-3 gap-6 mb-16">
+
+        <!-- Feature 1: Quest-like Routines -->
+        <div class="gradient-border p-6 reveal group cursor-default transition-all duration-300 hover:-translate-y-2">
+          <div class="icon-ring w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <span class="text-3xl">⚔️</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-3">Quest-like Routines</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Transform boring daily tasks into exciting game quests. Each routine becomes a mission with clear objectives, difficulty levels, and epic rewards.
+          </p>
+          <div class="space-y-2">
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span class="w-1.5 h-1.5 rounded-full bg-neon-purple"></span>
+              Difficulty-based EXP rewards
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span class="w-1.5 h-1.5 rounded-full bg-neon-cyan"></span>
+              Daily, weekly & custom quests
+            </div>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span class="w-1.5 h-1.5 rounded-full bg-neon-pink"></span>
+              PVP battle system
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 2: Level Up & Rewards -->
+        <div class="gradient-border p-6 reveal reveal-delay-1 group cursor-default transition-all duration-300 hover:-translate-y-2">
+          <div class="icon-ring w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <span class="text-3xl">🏆</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-3">Level Up & Rewards</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Earn EXP and Gold as you complete routines. Level up your RPG character, unlock rare skins, and customize your avatar to show off your progress.
+          </p>
+          <!-- Mini XP Bar -->
+          <div class="bg-dark-border rounded-full h-2 mb-2 overflow-hidden">
+            <div class="progress-bar h-full rounded-full" style="--target-width: 72%"></div>
+          </div>
+          <div class="flex justify-between text-xs text-slate-500">
+            <span>Lv. 12</span>
+            <span>720 / 1000 EXP</span>
+          </div>
+        </div>
+
+        <!-- Feature 3: Streak & Statistics -->
+        <div class="gradient-border p-6 reveal reveal-delay-2 group cursor-default transition-all duration-300 hover:-translate-y-2">
+          <div class="icon-ring w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <span class="text-3xl">📊</span>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-3">Streak & Statistics</h3>
+          <p class="text-slate-400 text-sm leading-relaxed mb-4">
+            Beautiful visualized stats keep you motivated. Track your streaks, completion rates, and compare with friends on the community leaderboard.
+          </p>
+          <!-- Mini Streak Dots -->
+          <div class="flex gap-1.5 flex-wrap">
+            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
+            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
+            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
+            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
+            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
+            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
+            <div class="w-7 h-7 rounded-lg bg-neon-purple opacity-90 flex items-center justify-center text-xs">🔥</div>
+            <div class="w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center text-xs text-slate-500">·</div>
+            <div class="w-7 h-7 rounded-lg bg-slate-700 flex items-center justify-center text-xs text-slate-500">·</div>
+          </div>
+          <p class="text-xs text-neon-cyan mt-2 font-semibold">🔥 7-Day Streak!</p>
+        </div>
+      </div>
+
+      <!-- Extra Feature Row -->
+      <div class="grid md:grid-cols-2 gap-6">
+        <!-- AR Character -->
+        <div class="glass-card rounded-2xl p-6 reveal group transition-all duration-300 hover:-translate-y-1">
+          <div class="flex items-start gap-4">
+            <div class="icon-ring w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">🥽</span>
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-lg text-white mb-2">AR Character System</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Summon your RPG character in the real world via your camera. Place your hero on your hand and capture proof-of-habit photos.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PVP Battle -->
+        <div class="glass-card rounded-2xl p-6 reveal reveal-delay-1 group transition-all duration-300 hover:-translate-y-1">
+          <div class="flex items-start gap-4">
+            <div class="icon-ring w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0">
+              <span class="text-2xl">⚡</span>
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-lg text-white mb-2">PVP Battle Mode</h3>
+              <p class="text-slate-400 text-sm leading-relaxed">Challenge nearby users to AR battles. Losers must complete a routine chosen by the winner — the ultimate accountability system.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       HOW IT WORKS
+  ═══════════════════════════════════════════ -->
+  <section class="py-24 relative overflow-hidden bg-gradient-to-b from-dark-bg via-purple-950/10 to-dark-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-4 reveal">
+          How It <span class="gradient-text">Works</span>
+        </h2>
+        <p class="text-slate-400 text-lg max-w-xl mx-auto reveal reveal-delay-1">Three simple steps to turn your habits into an adventure.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8 relative">
+        <!-- Connecting Line (desktop) -->
+        <div class="hidden md:block absolute top-10 left-1/4 right-1/4 h-px bg-gradient-to-r from-neon-purple via-neon-cyan to-neon-purple opacity-30"></div>
+
+        <!-- Step 1 -->
+        <div class="text-center reveal">
+          <div class="relative inline-flex mb-6">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-purple-800 flex items-center justify-center text-4xl glow-purple">
+              📋
+            </div>
+            <div class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-neon-purple text-white text-xs font-black flex items-center justify-center">1</div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-3">Set Your Quests</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Add your daily routines as quests. Set difficulty, frequency, and rewards. Import popular routines from the community.</p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="text-center reveal reveal-delay-1">
+          <div class="relative inline-flex mb-6">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-600 to-cyan-800 flex items-center justify-center text-4xl glow-cyan">
+              ✅
+            </div>
+            <div class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-neon-cyan text-dark-bg text-xs font-black flex items-center justify-center">2</div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-3">Complete & Earn</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Complete quests and earn EXP + Gold. Take AR proof photos and share them with the community for bonus rewards.</p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="text-center reveal reveal-delay-2">
+          <div class="relative inline-flex mb-6">
+            <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-pink-600 to-pink-800 flex items-center justify-center text-4xl" style="box-shadow: 0 0 30px rgba(236,72,153,0.4)">
+              🚀
+            </div>
+            <div class="absolute -top-2 -right-2 w-7 h-7 rounded-full bg-neon-pink text-white text-xs font-black flex items-center justify-center">3</div>
+          </div>
+          <h3 class="font-display font-bold text-xl text-white mb-3">Level Up & Dominate</h3>
+          <p class="text-slate-400 text-sm leading-relaxed">Watch your character grow stronger. Challenge others in PVP, climb the leaderboard, and become the ultimate habit champion.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       APP SHOWCASE
+  ═══════════════════════════════════════════ -->
+  <section id="showcase" class="py-24 relative overflow-hidden">
+    <div class="orb w-96 h-96 bg-cyan-700 opacity-10 top-0 -left-20"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+
+        <!-- Left: Character Image -->
+        <div class="relative flex justify-center reveal">
+          <div class="relative w-64 sm:w-80">
+            <div class="absolute inset-0 bg-purple-500 opacity-25 blur-3xl rounded-full"></div>
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663665192860/Wikxk2anuAmLqrPPdcBFwZ/roubit-hero-BJXPe7FdL5pnrstnKPuubR.webp"
+              alt="RouBit Character"
+              class="relative z-10 w-full animate-float drop-shadow-2xl"
+              loading="lazy"
+            />
+            <!-- Orbiting badges -->
+            <div class="absolute top-4 -right-8 z-20 glass-card rounded-xl px-3 py-2 animate-float" style="animation-delay:0.5s">
+              <div class="text-xs text-slate-400">Level</div>
+              <div class="font-display font-black text-xl gradient-text">Lv.15</div>
+            </div>
+            <div class="absolute bottom-12 -left-10 z-20 glass-card rounded-xl px-3 py-2 animate-float-delayed">
+              <div class="text-xs text-slate-400">Gold</div>
+              <div class="font-display font-black text-xl text-yellow-400">2,840 🪙</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Feature List -->
+        <div class="reveal reveal-delay-1">
+          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-4">
+            <span class="text-neon-cyan text-xs font-semibold tracking-widest uppercase">App Showcase</span>
+          </div>
+          <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-6">
+            Your Character,<br/>
+            <span class="gradient-text">Your Story</span>
+          </h2>
+          <p class="text-slate-400 text-lg leading-relaxed mb-8">
+            Every habit you build makes your character stronger. Customize your hero with rare skins, compete in AR battles, and share your journey with the community.
+          </p>
+
+          <div class="space-y-4">
+            <div class="flex items-center gap-4 glass-card rounded-xl p-4 hover:border-purple-500/40 transition-colors">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/20 flex items-center justify-center text-xl flex-shrink-0">🎭</div>
+              <div>
+                <div class="font-semibold text-white text-sm">5 Unique Character Skins</div>
+                <div class="text-slate-400 text-xs">Wizard, Warrior, Ranger, Paladin & more</div>
+              </div>
+              <div class="ml-auto text-neon-purple text-xs font-semibold">Unlock →</div>
+            </div>
+
+            <div class="flex items-center gap-4 glass-card rounded-xl p-4 hover:border-cyan-500/40 transition-colors">
+              <div class="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center text-xl flex-shrink-0">📍</div>
+              <div>
+                <div class="font-semibold text-white text-sm">Local Leaderboards</div>
+                <div class="text-slate-400 text-xs">Compete with your neighborhood, school & office</div>
+              </div>
+              <div class="ml-auto text-neon-cyan text-xs font-semibold">#1 →</div>
+            </div>
+
+            <div class="flex items-center gap-4 glass-card rounded-xl p-4 hover:border-pink-500/40 transition-colors">
+              <div class="w-10 h-10 rounded-xl bg-pink-500/20 flex items-center justify-center text-xl flex-shrink-0">📸</div>
+              <div>
+                <div class="font-semibold text-white text-sm">AR Proof Photos</div>
+                <div class="text-slate-400 text-xs">Capture & share your achievements with AR overlay</div>
+              </div>
+              <div class="ml-auto text-neon-pink text-xs font-semibold">Share →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       TESTIMONIALS
+  ═══════════════════════════════════════════ -->
+  <section id="testimonials" class="py-24 relative overflow-hidden bg-gradient-to-b from-dark-bg via-purple-950/10 to-dark-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-4 reveal">
+          What <span class="gradient-text">Questers Say</span>
+        </h2>
+        <p class="text-slate-400 text-lg reveal reveal-delay-1">Real stories from real habit heroes.</p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Testimonial 1 -->
+        <div class="testimonial-card rounded-2xl p-6 reveal">
+          <div class="flex items-center gap-1 mb-4">
+            <span class="text-yellow-400 text-sm">★★★★★</span>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed mb-5">
+            "I've tried every habit app out there. RouBit is the ONLY one that actually kept me engaged for more than a week. The PVP system is genius — I can't let my friends beat me!"
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center font-bold text-white">J</div>
+            <div>
+              <div class="text-white font-semibold text-sm">Jimin K.</div>
+              <div class="text-slate-500 text-xs">Software Engineer · Lv.28</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 2 -->
+        <div class="testimonial-card rounded-2xl p-6 reveal reveal-delay-1">
+          <div class="flex items-center gap-1 mb-4">
+            <span class="text-yellow-400 text-sm">★★★★★</span>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed mb-5">
+            "The AR character feature is so cool! I put my character on my hand every morning after my workout. It's become my favorite part of the day. 30-day streak and counting! 🔥"
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-cyan-400 to-blue-400 flex items-center justify-center font-bold text-white">S</div>
+            <div>
+              <div class="text-white font-semibold text-sm">Sarah M.</div>
+              <div class="text-slate-500 text-xs">Fitness Coach · Lv.41</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Testimonial 3 -->
+        <div class="testimonial-card rounded-2xl p-6 reveal reveal-delay-2">
+          <div class="flex items-center gap-1 mb-4">
+            <span class="text-yellow-400 text-sm">★★★★★</span>
+          </div>
+          <p class="text-slate-300 text-sm leading-relaxed mb-5">
+            "My whole office uses RouBit now. We have a company leaderboard and it's created this amazing culture of healthy competition. Productivity is up 40% — no joke."
+          </p>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-400 flex items-center justify-center font-bold text-white">T</div>
+            <div>
+              <div class="text-white font-semibold text-sm">Taeyang P.</div>
+              <div class="text-slate-500 text-xs">Product Manager · Lv.35</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       DOWNLOAD CTA
+  ═══════════════════════════════════════════ -->
+  <section id="download" class="py-24 relative overflow-hidden">
+    <div class="orb w-[600px] h-[600px] bg-purple-700 opacity-15 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+      <div class="gradient-border p-10 sm:p-16 reveal">
+        <div class="text-6xl mb-6 animate-float">🐰</div>
+        <h2 class="font-display font-black text-4xl sm:text-5xl text-white mb-4">
+          Ready to Start Your<br/>
+          <span class="gradient-text">Epic Journey?</span>
+        </h2>
+        <p class="text-slate-400 text-lg mb-10 max-w-xl mx-auto">
+          Join 50,000+ questers who turned their boring routines into legendary habits. Free to download. No subscription required.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+          <a href="#" class="shimmer-btn flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white text-base group hover:scale-105 transition-transform">
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+            </svg>
+            <div class="text-left">
+              <div class="text-xs opacity-80">Download on the</div>
+              <div class="font-bold text-lg">App Store</div>
+            </div>
+          </a>
+
+          <a href="#" class="btn-secondary flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-semibold text-white text-base group hover:scale-105 transition-transform">
+            <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3.18 23.76c.3.17.64.22.97.14l12.49-7.17-2.79-2.79-10.67 9.82zm-1.59-20.4C1.24 3.72 1 4.18 1 4.78v14.44c0 .6.24 1.06.59 1.42l.07.07 8.09-8.09v-.19L1.59 3.36zm18.12 8.3l-2.55-1.47-3.07 3.07 3.07 3.07 2.57-1.48c.73-.42.73-1.11 0-1.53l-.02-.66zm-17.1 10.32L14.1 14.5l-2.79-2.79L2.61 21.98z"/>
+            </svg>
+            <div class="text-left">
+              <div class="text-xs opacity-80">Get it on</div>
+              <div class="font-bold text-lg">Google Play</div>
+            </div>
+          </a>
+        </div>
+
+        <p class="text-slate-500 text-sm">
+          ✨ Free forever · No credit card · Available on iOS & Android
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════════ -->
+  <footer class="border-t border-dark-border py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8 mb-10">
+        <!-- Brand -->
+        <div class="md:col-span-2">
+          <div class="flex items-center gap-2 mb-4">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-400 flex items-center justify-center text-base font-black text-white">R</div>
+            <span class="font-display font-bold text-2xl gradient-text">RouBit</span>
+          </div>
+          <p class="text-slate-400 text-sm leading-relaxed max-w-xs mb-5">
+            Turn your daily routine into an epic quest. Build habits, level up your character, and dominate the leaderboard.
+          </p>
+          <!-- Social Icons -->
+          <div class="flex gap-3">
+            <a href="#" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-slate-400 hover:text-neon-purple transition-colors" aria-label="Twitter/X">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-slate-400 hover:text-neon-pink transition-colors" aria-label="Instagram">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="#" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-slate-400 hover:text-neon-cyan transition-colors" aria-label="Discord">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028 14.09 14.09 0 001.226-1.994.076.076 0 00-.041-.106 13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+            </a>
+            <a href="#" class="w-9 h-9 rounded-lg glass-card flex items-center justify-center text-slate-400 hover:text-white transition-colors" aria-label="GitHub">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div>
+          <h4 class="font-semibold text-white mb-4 text-sm">Product</h4>
+          <ul class="space-y-2">
+            <li><a href="#features" class="text-slate-400 hover:text-white text-sm transition-colors">Features</a></li>
+            <li><a href="#showcase" class="text-slate-400 hover:text-white text-sm transition-colors">App Showcase</a></li>
+            <li><a href="#download" class="text-slate-400 hover:text-white text-sm transition-colors">Download</a></li>
+            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Changelog</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-semibold text-white mb-4 text-sm">Legal</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Privacy Policy</a></li>
+            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Terms of Service</a></li>
+            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Cookie Policy</a></li>
+            <li><a href="#" class="text-slate-400 hover:text-white text-sm transition-colors">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="border-t border-dark-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p class="text-slate-500 text-sm">© 2025 RouBit. All rights reserved. Made with ❤️ for habit heroes.</p>
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-neon-cyan animate-pulse"></span>
+          <span class="text-slate-500 text-xs">All systems operational</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       JAVASCRIPT
+  ═══════════════════════════════════════════ -->
+  <script>
+    // ── Mobile Menu ──────────────────────────────
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+    const closeIcon = document.getElementById('close-icon');
+    let menuOpen = false;
+
+    menuBtn.addEventListener('click', () => {
+      menuOpen = !menuOpen;
+      mobileMenu.classList.toggle('open', menuOpen);
+      menuIcon.classList.toggle('hidden', menuOpen);
+      closeIcon.classList.toggle('hidden', !menuOpen);
+    });
+
+    function closeMobileMenu() {
+      menuOpen = false;
+      mobileMenu.classList.remove('open');
+      menuIcon.classList.remove('hidden');
+      closeIcon.classList.add('hidden');
+    }
+
+    // ── Scroll Reveal ─────────────────────────────
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // ── Animated Counters ─────────────────────────
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !entry.target.dataset.counted) {
+          entry.target.dataset.counted = 'true';
+          animateCounter(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('[data-target]').forEach(el => counterObserver.observe(el));
+
+    function animateCounter(el) {
+      const target = parseFloat(el.dataset.target);
+      const isDecimal = target % 1 !== 0;
+      const duration = 2000;
+      const start = performance.now();
+
+      function update(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const current = target * eased;
+
+        if (target >= 1000000) {
+          el.textContent = (current / 1000000).toFixed(1) + 'M+';
+        } else if (target >= 1000) {
+          el.textContent = Math.floor(current / 1000) + 'K+';
+        } else if (isDecimal) {
+          el.textContent = current.toFixed(1);
+        } else {
+          el.textContent = Math.floor(current) + (target === 98 ? '%' : '');
+        }
+
+        if (progress < 1) requestAnimationFrame(update);
+        else {
+          if (target >= 1000000) el.textContent = (target / 1000000).toFixed(1) + 'M+';
+          else if (target >= 1000) el.textContent = Math.floor(target / 1000) + 'K+';
+          else if (isDecimal) el.textContent = target.toFixed(1);
+          else el.textContent = target + (target === 98 ? '%' : '');
+        }
+      }
+      requestAnimationFrame(update);
+    }
+
+    // ── Particle System ───────────────────────────
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animFrame;
+
+    function resizeCanvas() {
+      const hero = document.getElementById('hero');
+      canvas.width = hero.offsetWidth;
+      canvas.height = hero.offsetHeight;
+    }
+
+    class Particle {
+      constructor() { this.reset(); }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.5 + 0.1;
+        this.color = Math.random() > 0.5 ? '#a855f7' : '#22d3ee';
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+      }
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.opacity;
+        ctx.fillStyle = this.color;
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function initParticles() {
+      resizeCanvas();
+      particles = Array.from({ length: 80 }, () => new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      animFrame = requestAnimationFrame(animateParticles);
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      particles.forEach(p => p.reset());
+    });
+
+    initParticles();
+    animateParticles();
+
+    // ── Navbar Scroll Effect ──────────────────────
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      if (window.scrollY > 50) {
+        nav.style.borderBottomColor = 'rgba(168,85,247,0.2)';
+      } else {
+        nav.style.borderBottomColor = 'rgba(168,85,247,0.1)';
+      }
+    });
+
+    // ── Progress Bar Trigger ──────────────────────
+    const progressObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = 'none';
+          entry.target.offsetHeight; // reflow
+          entry.target.style.animation = '';
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.progress-bar').forEach(el => progressObserver.observe(el));
+  </script>
+</body>
+</html>
